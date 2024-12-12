@@ -6,4 +6,6 @@ public interface ScheduleService {
 
     ScheduleResponseDto createSchedule(String username,String title,String contents);
 
+    ScheduleResponseDto findScheduleById(Long id);
+
 }
