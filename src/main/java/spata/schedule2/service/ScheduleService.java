@@ -8,4 +8,6 @@ public interface ScheduleService {
 
     ScheduleResponseDto findScheduleById(Long id);
 
+    ScheduleResponseDto modifyScheduleById(Long id,String username,String title,String contents);
+
 }

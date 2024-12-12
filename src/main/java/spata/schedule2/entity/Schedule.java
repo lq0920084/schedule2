@@ -2,10 +2,12 @@ package spata.schedule2.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name="schedule")
 @Getter
+@Setter
 public class Schedule extends DateBaseEntity {
 
     @Id
