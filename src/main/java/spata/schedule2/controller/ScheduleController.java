@@ -11,14 +11,14 @@ import spata.schedule2.service.ScheduleService;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/schedule")
 @Slf4j
 public class ScheduleController {
 
 
     private final ScheduleService scheduleService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto dto){
 
         return new ResponseEntity<>(scheduleService.createSchedule(dto.getUsername(),dto.getTitle(),dto.getContents()),HttpStatus.OK);
@@ -29,4 +29,5 @@ public class ScheduleController {
 
         return new ResponseEntity<>(scheduleService.findScheduleById(id),HttpStatus.OK);
     }
+
 }
