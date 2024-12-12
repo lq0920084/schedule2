@@ -10,4 +10,5 @@ public interface ScheduleService {
 
     ScheduleResponseDto modifyScheduleById(Long id,String username,String title,String contents);
 
+    void removeScheduleById(Long id);
 }

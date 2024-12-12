@@ -36,4 +36,10 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.modifyScheduleById(id,dto.getUsername(),dto.getTitle(),dto.getContents()),HttpStatus.OK);
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> removeScheduleById(@PathVariable Long id){
+        scheduleService.removeScheduleById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }

@@ -63,4 +63,11 @@ public class ScheduleServiceImpl implements ScheduleService {
         );
     }
 
+    @Override
+    public void removeScheduleById(Long id) {
+        Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(() ->
+                (new ResponseStatusException(HttpStatus.NOT_FOUND,"does not exist ID")));
+        scheduleRepository.deleteById(id);
+    }
+
 }
