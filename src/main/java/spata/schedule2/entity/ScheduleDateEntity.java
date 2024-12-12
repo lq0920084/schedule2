@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class DateBaseEntity {
+public abstract class ScheduleDateEntity {
 
     @CreatedDate
     @Column(updatable=false)
@@ -22,4 +22,5 @@ public abstract class DateBaseEntity {
     @LastModifiedDate
     @Column
     private LocalDateTime ModifiedAt;
+
 }

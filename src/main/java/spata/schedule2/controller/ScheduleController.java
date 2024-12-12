@@ -23,7 +23,10 @@ public class ScheduleController {
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto dto) {
 
-        return new ResponseEntity<>(scheduleService.createSchedule(dto.getUsername(),dto.getTitle(),dto.getContents()), HttpStatus.CREATED);
+        return new ResponseEntity<>(scheduleService.createSchedule(
+                dto.getUserid(),
+                dto.getTitle(),
+                dto.getContents()),HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
@@ -35,7 +38,7 @@ public class ScheduleController {
     @PutMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> modifyScheduleById(@PathVariable Long id,@RequestBody ScheduleRequestDto dto) {
 
-        return new ResponseEntity<>(scheduleService.modifyScheduleById(id,dto.getUsername(),dto.getTitle(),dto.getContents()),HttpStatus.OK);
+        return new ResponseEntity<>(scheduleService.modifyScheduleById(id,dto.getTitle(),dto.getContents()),HttpStatus.OK);
     }
 
     @DeleteMapping("{id}")

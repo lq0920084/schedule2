@@ -8,7 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import spata.schedule2.dto.ScheduleResponseDto;
 import spata.schedule2.entity.Schedule;
+import spata.schedule2.entity.User;
 import spata.schedule2.repository.ScheduleRepository;
+import spata.schedule2.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +19,20 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
     private final ScheduleRepository scheduleRepository;
+    private final UserRepository userRepository;
 
 
     @Override
-    public ScheduleResponseDto createSchedule(String username, String title, String contents) {
-        Schedule schedule = new Schedule(username, title, contents);
+    public ScheduleResponseDto createSchedule(String userId, String title, String contents) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userId")));
+        Schedule schedule = new Schedule(user, title, contents);
         Schedule savedSchedule = scheduleRepository.save(schedule);
+
         return new ScheduleResponseDto(
                 savedSchedule.getId(),
-                savedSchedule.getUsername(),
+                user.getUserId(),
+                user.getUsername(),
                 savedSchedule.getTitle(),
                 savedSchedule.getContents(),
                 savedSchedule.getCreateAt(),
@@ -37,9 +44,13 @@ public class ScheduleServiceImpl implements ScheduleService {
         Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(() ->
                 (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist ID"))
         );
+        User findUser = findSchedule.getUserId();
+        User user = userRepository.findById(findUser.getUserId()).orElseThrow(() ->
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userId")));
         return new ScheduleResponseDto(
                 findSchedule.getId(),
-                findSchedule.getUsername(),
+                findUser.getUserId(),
+                user.getUsername(),
                 findSchedule.getTitle(),
                 findSchedule.getContents(),
                 findSchedule.getCreateAt(),
@@ -49,16 +60,18 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Transactional
     @Override
-    public ScheduleResponseDto modifyScheduleById(Long id, String username, String title, String contents) {
+    public ScheduleResponseDto modifyScheduleById(Long id, String title, String contents) {
         Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(() ->
                 (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist ID")));
-                    findSchedule.setUsername(username);
-                    findSchedule.setTitle(title);
-                    findSchedule.setContents(contents);
-
+        User findUser = findSchedule.getUserId();
+        User user = userRepository.findById(findUser.getUserId()).orElseThrow(() ->
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userId")));
+        findSchedule.setTitle(title);
+        findSchedule.setContents(contents);
         return new ScheduleResponseDto(
                 findSchedule.getId(),
-                findSchedule.getUsername(),
+                findUser.getUserId(),
+                user.getUsername(),
                 findSchedule.getTitle(),
                 findSchedule.getContents(),
                 findSchedule.getCreateAt(),
@@ -69,7 +82,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public void removeScheduleById(Long id) {
         scheduleRepository.findById(id).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND,"does not exist ID")));
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist ID")));
         scheduleRepository.deleteById(id);
     }
 
@@ -78,12 +91,16 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleList_To_ScheduleResponseDto(scheduleRepository.findAll());
     }
 
-    private List<ScheduleResponseDto> scheduleList_To_ScheduleResponseDto(List<Schedule> schedule_list){
+    private List<ScheduleResponseDto> scheduleList_To_ScheduleResponseDto(List<Schedule> schedule_list) {
         List<ScheduleResponseDto> scheduleResponseDto_list = new ArrayList<>();
-        for(Schedule schedule : schedule_list){
+        for (Schedule schedule : schedule_list) {
+            User findUser = schedule.getUserId();
+            User user = userRepository.findById(findUser.getUserId()).orElseThrow(() ->
+                    (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userId")));
             scheduleResponseDto_list.add(new ScheduleResponseDto(
                     schedule.getId(),
-                    schedule.getUsername(),
+                    findUser.getUserId(),
+                    user.getUsername(),
                     schedule.getTitle(),
                     schedule.getContents(),
                     schedule.getCreateAt(),
