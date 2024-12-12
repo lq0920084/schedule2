@@ -9,6 +9,8 @@ import spata.schedule2.dto.ScheduleRequestDto;
 import spata.schedule2.dto.ScheduleResponseDto;
 import spata.schedule2.service.ScheduleService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/schedule")
@@ -40,6 +42,12 @@ public class ScheduleController {
     public ResponseEntity<Void> removeScheduleById(@PathVariable Long id){
         scheduleService.removeScheduleById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ScheduleResponseDto>> findScheduleByAll(){
+
+        return new ResponseEntity<>(scheduleService.findScheduleByAll(),HttpStatus.OK);
     }
 
 }

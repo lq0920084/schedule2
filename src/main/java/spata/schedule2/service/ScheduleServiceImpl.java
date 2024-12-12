@@ -10,6 +10,9 @@ import spata.schedule2.dto.ScheduleResponseDto;
 import spata.schedule2.entity.Schedule;
 import spata.schedule2.repository.ScheduleRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
@@ -65,9 +68,28 @@ public class ScheduleServiceImpl implements ScheduleService {
 
     @Override
     public void removeScheduleById(Long id) {
-        Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(() ->
+        scheduleRepository.findById(id).orElseThrow(() ->
                 (new ResponseStatusException(HttpStatus.NOT_FOUND,"does not exist ID")));
         scheduleRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ScheduleResponseDto> findScheduleByAll() {
+        return scheduleList_To_ScheduleResponseDto(scheduleRepository.findAll());
+    }
+
+    private List<ScheduleResponseDto> scheduleList_To_ScheduleResponseDto(List<Schedule> schedule_list){
+        List<ScheduleResponseDto> scheduleResponseDto_list = new ArrayList<>();
+        for(Schedule schedule : schedule_list){
+            scheduleResponseDto_list.add(new ScheduleResponseDto(
+                    schedule.getId(),
+                    schedule.getUsername(),
+                    schedule.getTitle(),
+                    schedule.getContents(),
+                    schedule.getCreateAt(),
+                    schedule.getModifiedAt()));
+        }
+        return scheduleResponseDto_list;
     }
 
 }

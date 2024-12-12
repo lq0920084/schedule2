@@ -2,6 +2,8 @@ package spata.schedule2.service;
 
 import spata.schedule2.dto.ScheduleResponseDto;
 
+import java.util.List;
+
 public interface ScheduleService {
 
     ScheduleResponseDto createSchedule(String username,String title,String contents);
@@ -11,4 +13,5 @@ public interface ScheduleService {
     ScheduleResponseDto modifyScheduleById(Long id,String username,String title,String contents);
 
     void removeScheduleById(Long id);
+    List<ScheduleResponseDto> findScheduleByAll();
 }
