@@ -18,6 +18,9 @@ public class User extends UserDateEntity {
     @Column(nullable=false)
     private String username;
 
+    @Column(nullable=false)
+    private String password;
+
     //보통 회원가입의 경우 이메일을 생략하는 경우는 거의 없기에 nullable로 섫정하였습니다.
     @Column(nullable=false)
     private String email;

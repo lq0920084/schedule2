@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserService {
 
-    UserResponseDto createUser(String username,String email);
+    UserResponseDto createUser(String username,String password,String email);
 
     UserResponseDto findUserById(String id);
 

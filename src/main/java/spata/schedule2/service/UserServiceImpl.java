@@ -19,8 +19,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserResponseDto createUser(String username, String email) {
-        User user = new User(UUID.randomUUID().toString(),username,email);
+    public UserResponseDto createUser(String username,String password,String email) {
+        User user = new User(UUID.randomUUID().toString(),username,password,email);
         User savedUser = userRepository.save(user);
         return  new UserResponseDto(
                 savedUser.getUserId(),
