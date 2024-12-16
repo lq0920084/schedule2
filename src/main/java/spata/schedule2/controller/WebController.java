@@ -20,7 +20,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/web")
-public class LoginController {
+public class WebController {
     private final UserService userService;
     private final ScheduleService scheduleService;
 
