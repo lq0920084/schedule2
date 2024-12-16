@@ -5,8 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
-import spata.schedule2.dto.LoginResponseDto;
-import spata.schedule2.dto.UserResponseDto;
+import spata.schedule2.dto.*;
 import spata.schedule2.entity.User;
 import spata.schedule2.repository.UserRepository;
 
@@ -21,8 +20,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public UserResponseDto createUser(String username,String password,String email) {
-        User user = new User(UUID.randomUUID().toString(),username,password,email);
+    public UserResponseDto createUser(UserRequestDto userRequestDto) {
+        User user = new User(UUID.randomUUID().toString(),userRequestDto.getUsername(),
+                                                        userRequestDto.getPassword(),
+                                                        userRequestDto.getEmail());
         User savedUser = userRepository.save(user);
         return  new UserResponseDto(
                 savedUser.getUserid(),
@@ -44,11 +45,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto modifyUserById(String id, String username, String email) {
+    public UserResponseDto modifyUserById(String id, UserModifyRequestDto userModifyRequestDto) {
         User user = userRepository.findById(id).orElseThrow(() ->
                 (new ResponseStatusException(HttpStatus.NOT_FOUND,"does not exist userid")));
-            user.setUsername(username);
-            user.setEmail(email);
+            user.setUsername(userModifyRequestDto.getUsername());
+            user.setEmail(userModifyRequestDto.getEmail());
 
         return new UserResponseDto(
                 user.getUserid(),
@@ -71,19 +72,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean signUp(String username, String password, String email) {
-        if(checkEmail(email).getEmail().equals(email)){
+    public boolean signUp(UserRequestDto userRequestDto) {
+        if(checkEmail(userRequestDto.getEmail()).getEmail().equals(userRequestDto.getEmail())){
             return false;
         }else {
-            createUser(username,password,email);
+            createUser(userRequestDto);
         }
         return true;
     }
 
     @Override
-    public LoginResponseDto userLogin(String email, String password) {
-            User user = checkEmail(email);
-        if(user.getPassword().equals(password)){
+    public LoginResponseDto userLogin(LoginRequestDto loginRequestDto) {
+            User user = checkEmail(loginRequestDto.getEmail());
+        if(user.getPassword().equals(loginRequestDto.getPassword())){
             return new LoginResponseDto(user.getUserid());
         }
         return new LoginResponseDto("LoginFailed");
@@ -91,10 +92,10 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto modifyUserPasswordById(String id, String password) {
+    public UserResponseDto modifyUserPasswordById(String id, UserPasswordRequestDto dto ) {
         User user = userRepository.findById(id).orElseThrow(() ->
                 (new ResponseStatusException(HttpStatus.NOT_FOUND,"does not exist userid")));
-        user.setPassword(password);
+        user.setPassword(dto.getPassword());
         return new UserResponseDto(
                 user.getUserid(),
                 user.getUsername(),

@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import spata.schedule2.dto.UserModifyRequestDto;
+import spata.schedule2.dto.UserPasswordRequestDto;
 import spata.schedule2.dto.UserRequestDto;
 import spata.schedule2.dto.UserResponseDto;
 import spata.schedule2.service.UserService;
@@ -20,7 +22,7 @@ public class UserController {
 @PostMapping
     public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto dto){
 
-    return new ResponseEntity<>(userService.createUser(dto.getUsername(),dto.getPassword(),dto.getEmail()),HttpStatus.CREATED);
+    return new ResponseEntity<>(userService.createUser(dto),HttpStatus.CREATED);
 
 }
 
@@ -31,15 +33,15 @@ public class UserController {
 }
 
 @PutMapping("{id}")
-    public ResponseEntity<UserResponseDto> modifyUserById(@PathVariable String id,@RequestBody UserRequestDto dto){
+    public ResponseEntity<UserResponseDto> modifyUserById(@PathVariable String id,@RequestBody UserModifyRequestDto dto){
 
-    return new ResponseEntity<>(userService.modifyUserById(id,dto.getUsername(),dto.getEmail()),HttpStatus.OK);
+    return new ResponseEntity<>(userService.modifyUserById(id,dto),HttpStatus.OK);
 
 }
 @PutMapping("/changepassword/{id}")
-    public ResponseEntity<UserResponseDto> modifyUserpasswordById(@PathVariable String id,@RequestBody UserRequestDto dto){
+    public ResponseEntity<UserResponseDto> modifyUserpasswordById(@PathVariable String id,@RequestBody UserPasswordRequestDto dto){
 
-    return new ResponseEntity<>(userService.modifyUserPasswordById(id,dto.getPassword()),HttpStatus.OK);
+    return new ResponseEntity<>(userService.modifyUserPasswordById(id,dto),HttpStatus.OK);
 }
 
 @DeleteMapping("{id}")

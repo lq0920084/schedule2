@@ -28,7 +28,7 @@ public class ScheduleController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> loginUser(@RequestBody LoginRequestDto dto,HttpServletRequest request){
-        LoginResponseDto loginResponseDto = userService.userLogin(dto.getEmail(), dto.getPassword());
+        LoginResponseDto loginResponseDto = userService.userLogin(dto);
         if (loginResponseDto.getUserId().equals("LoginFailed")){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }else {

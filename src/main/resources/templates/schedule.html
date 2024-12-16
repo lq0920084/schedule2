@@ -26,15 +26,15 @@
         <td> <span th:text="${result.contents}"> 일정내용 </span></td>
         <td> <span th:text="${result.createAt}"> 작성일과 작성시간 </span></td>
         <td> <span th:text="${result.modifiedAt}"> 수정일과 수정시간 </span></td>
-        <td><form th:action="@{/user/modify}" method="post">
+        <td><form th:action="@{/web/modify}" method="post">
             <button type="submit" name="id" th:value="${result.id}">일정수정</button>
         </form>
-            <form th:action="@{/user/delete}" method="post">
+            <form th:action="@{/web/delete}" method="post">
             <button type="submit" name="id" th:value="${result.id}">일정삭제</button>
         </form></td>
     </tr>
-    <td><span><button th:onclick="|location.href='@{/user/newSchedule}'|">새일정추가</button></span></td>
-    <td><span><button th:onclick="|location.href='@{/user/logout}'|">로그아웃</button></span></td>
+    <td><span><button th:onclick="|location.href='@{/web/newSchedule}'|">새일정추가</button></span></td>
+    <td><span><button th:onclick="|location.href='@{/web/logout}'|">로그아웃</button></span></td>
 </tbody>
 </table>
 <script th:inline="javascript">

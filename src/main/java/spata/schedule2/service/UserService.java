@@ -1,25 +1,24 @@
 package spata.schedule2.service;
 
-import spata.schedule2.dto.LoginResponseDto;
-import spata.schedule2.dto.UserResponseDto;
+import spata.schedule2.dto.*;
 
 import java.util.List;
 
 public interface UserService {
 
-    UserResponseDto createUser(String username,String password,String email);
+    UserResponseDto createUser(UserRequestDto userRequestDto);
 
     UserResponseDto findUserById(String id);
 
-    UserResponseDto modifyUserById(String id,String username,String email);
+    UserResponseDto modifyUserById(String id,UserModifyRequestDto userModifyRequestDto);
 
     void deleteUserById(String id);
 
     List<UserResponseDto> findUserByAll();
 
-    boolean signUp(String username,String password,String email);
+    boolean signUp(UserRequestDto userRequestDto);
 
-    LoginResponseDto userLogin(String email, String password);
+    LoginResponseDto userLogin(LoginRequestDto loginRequestDto);
 
-    UserResponseDto modifyUserPasswordById(String id, String password);
+    UserResponseDto modifyUserPasswordById(String id, UserPasswordRequestDto dto);
 }

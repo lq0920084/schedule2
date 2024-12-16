@@ -12,6 +12,7 @@ import java.io.IOException;
 
 @Slf4j
 public class LoginFilter implements Filter {
+    private final String[] WEB_REDIRECT = { "/","/web*"};
     private final String[] WHITE_LIST = {"/web/login","/web/logout","/web/signup","/schedule/login","/user*","/schedule/logout","/schedule/signup"};
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -43,6 +44,6 @@ public class LoginFilter implements Filter {
         return PatternMatchUtils.simpleMatch(this.WHITE_LIST,requestURI);
     }
     private boolean isUserOrSchedule(String requestURI){
-        return PatternMatchUtils.simpleMatch("/user/*",requestURI);
+        return PatternMatchUtils.simpleMatch(this.WEB_REDIRECT,requestURI);
     }
 }

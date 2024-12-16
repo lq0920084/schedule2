@@ -37,14 +37,10 @@ public class LoginController {
 
             model.addAttribute("message", "입력된 값이 유효한 형식이 아닙니다.");
         } else {
-            if (userService.signUp(
-                    request.getUsername(),
-                    request.getPassword(),
-                    request.getEmail()
-            )) {
+            if (userService.signUp(request)) {
                 model.addAttribute("message", "회원가입에 성공했습니다.");
                 model.addAttribute("chekSignUp", true);
-                model.addAttribute("signUpUrl", "/user/login");
+                model.addAttribute("signUpUrl", "/web/login");
             } else {
                 model.addAttribute("message", "이메일이 중복됩니다. 다시 확인해주세요.");
             }
@@ -63,13 +59,13 @@ public class LoginController {
     @PostMapping("/login")
     public String loginPostView(@ModelAttribute LoginRequestDto dto, Model model, HttpServletRequest request) {
         HttpSession session;
-        LoginResponseDto loginResponseDto = userService.userLogin(dto.getEmail(), dto.getPassword());
+        LoginResponseDto loginResponseDto = userService.userLogin(dto);
         if (loginResponseDto.getUserId().equals("LoginFailed")) {
             model.addAttribute("message", "로그인에 실패했습니다. 다시 확인해주세요.");
         } else {
             model.addAttribute("message", "로그인에 성공했습니다.");
             model.addAttribute("checkSignIn", true);
-            model.addAttribute("signInUrl", "/user/schedule");
+            model.addAttribute("signInUrl", "/web/schedule");
             session = request.getSession();
             session.setAttribute("userid", loginResponseDto.getUserId());
         }
@@ -99,7 +95,7 @@ public class LoginController {
        scheduleService.createSchedule((String) session.getAttribute("userid"), dto.getTitle(), dto.getContents());
         model.addAttribute("message","일정이 추가되었습니다.");
         model.addAttribute("chekCreate",true);
-        model.addAttribute("scheduleUrl","/user/schedule");
+        model.addAttribute("scheduleUrl","/web/schedule");
 
     return "newschedule";
     }
@@ -110,7 +106,7 @@ public class LoginController {
         if(scheduleService.removeScheduleByIdCheckUser((String)session.getAttribute("userid"),dto.getId())){
             model.addAttribute("message","삭제되었습니다.");
             model.addAttribute("checkScheduleList", true);
-            model.addAttribute("ScheduleListUrl","/user/schedule");
+            model.addAttribute("ScheduleListUrl","/web/schedule");
         }else{
             model.addAttribute("message","해당하는 일정이 없습니다..");
         }
@@ -147,7 +143,7 @@ public class LoginController {
             scheduleService.modifyScheduleById(dto.getId(),dto.getTitle(),dto.getContents());
             model.addAttribute("message","수정되었습니다.");
             model.addAttribute("chekModify",true);
-            model.addAttribute("scheduleUrl","/user/schedule");
+            model.addAttribute("scheduleUrl","/web/schedule");
 
         }else {
             model.addAttribute("message","수정에 실패했습니다. 데이터 변조가 감지되었씁니다..");
@@ -159,7 +155,7 @@ public class LoginController {
         public String logout(Model model,HttpServletRequest request){
         HttpSession session = request.getSession();
             session.invalidate();
-            return "redirect:/user/login";
+            return "redirect:/web/login";
 
         }
 

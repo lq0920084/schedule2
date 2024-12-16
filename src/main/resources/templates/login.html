@@ -6,7 +6,7 @@
 </HEAD>
 <BODY>
 <H2>로그인</H2>
-<form th:action="@{/user/login}" method="post">
+<form th:action="@{/web/login}" method="post">
     <div>
         <label for="email">이메일:</label>
         <input type="text" id="email" name="email" required>
@@ -16,7 +16,7 @@
         <input type="password" id="password" name="password" required>
     </div>
     <button type="submit">로그인</button>
-    <button th:onclick="|location.href='@{/user/signup}'|">회원가입</button>
+    <button th:onclick="|location.href='@{/web/signup}'|">회원가입</button>
 </form>
 <script th:inline="javascript">
     let message = [[${message}]]
