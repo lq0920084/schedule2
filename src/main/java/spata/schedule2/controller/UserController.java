@@ -24,20 +24,25 @@ public class UserController {
 
 }
 
-@GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> findUserByEmail(@PathVariable String id){
+@GetMapping("{id}")
+    public ResponseEntity<UserResponseDto> findUserById(@PathVariable String id){
 
     return new ResponseEntity<>(userService.findUserById(id),HttpStatus.OK);
 }
 
-@PutMapping("/{id}")
+@PutMapping("{id}")
     public ResponseEntity<UserResponseDto> modifyUserById(@PathVariable String id,@RequestBody UserRequestDto dto){
 
     return new ResponseEntity<>(userService.modifyUserById(id,dto.getUsername(),dto.getEmail()),HttpStatus.OK);
 
 }
+@PutMapping("/changepassword/{id}")
+    public ResponseEntity<UserResponseDto> modifyUserpasswordById(@PathVariable String id,@RequestBody UserRequestDto dto){
 
-@DeleteMapping("/{id}")
+    return new ResponseEntity<>(userService.modifyUserPasswordById(id,dto.getPassword()),HttpStatus.OK);
+}
+
+@DeleteMapping("{id}")
     public ResponseEntity<Void>  deleteUserById(@PathVariable String id){
 
     userService.deleteUserById(id);

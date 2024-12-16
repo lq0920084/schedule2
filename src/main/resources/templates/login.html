@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<HTML lang="ko" xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</HEAD>
+<BODY>
+<H2>로그인</H2>
+<form th:action="@{/user/login}" method="post">
+    <div>
+        <label for="email">이메일:</label>
+        <input type="text" id="email" name="email" required>
+    </div>
+    <div>
+        <label for="password">패스워드:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit">로그인</button>
+    <button th:onclick="|location.href='@{/user/signup}'|">회원가입</button>
+</form>
+<script th:inline="javascript">
+    let message = [[${message}]]
+    if(message!=null) {
+        alert(message);
+    }
+    if([[${checkSignIn}]]){
+        location.replace([[${signInUrl}]]);
+    }
+</script>
+</BODY>
+</HTML>

@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<HTML lang="ko" xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <meta charset="UTF-8">
+    <title>일정수정</title>
+</HEAD>
+<BODY>
+<H2>일정수정</H2>
+<form th:action="@{/user/modifySchedule}" method="post">
+    <div>
+        <label for="title">제목:</label>
+        <input type="text" id="title" name="title" th:value="${title}" required>
+    </div>
+    <div>
+        <label for="contents">일정:</label>
+        <input type="text" id="contents" name="contents" th:value="${contents}" required>
+    </div>
+    <button type="submit" name="id" th:value="${id}">일정수정</button>
+</form>
+<script th:inline="javascript">
+    let message = [[${message}]]
+    if(message!=null) {
+        alert(message);
+    }
+    if([[${chekModify}]]){
+        location.replace([[${scheduleUrl}]]);
+    }
+</script>
+</BODY>
+</HTML>

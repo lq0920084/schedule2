@@ -6,12 +6,21 @@ import java.util.List;
 
 public interface ScheduleService {
 
-    ScheduleResponseDto createSchedule(String userId,String title,String contents);
+    ScheduleResponseDto createSchedule(String userid,String title,String contents);
 
     ScheduleResponseDto findScheduleById(Long id);
 
     ScheduleResponseDto modifyScheduleById(Long id,String title,String contents);
 
     void removeScheduleById(Long id);
+
+    boolean removeScheduleByIdCheckUser(String userid,Long id);
+
+    boolean findScheduleByIdCheckUser(String userid,Long id);
+
+    ScheduleResponseDto modifyScheduleByIdCheckUser(String userid,Long id,String title,String contents);
+
     List<ScheduleResponseDto> findScheduleByAll();
+
+    List<ScheduleResponseDto> findScheduleByUserid(String userId);
 }

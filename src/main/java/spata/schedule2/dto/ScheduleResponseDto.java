@@ -11,8 +11,6 @@ public class ScheduleResponseDto {
 
     private Long id;
 
-    private String userid;
-
     private String username;
 
     private String title;

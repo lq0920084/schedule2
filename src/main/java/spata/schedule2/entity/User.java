@@ -13,7 +13,7 @@ import lombok.Setter;
 public class User extends UserDateEntity {
 
     @Id
-    private String userId;
+    private String userid;
 
     @Column(nullable=false)
     private String username;
@@ -22,9 +22,13 @@ public class User extends UserDateEntity {
     private String password;
 
     //보통 회원가입의 경우 이메일을 생략하는 경우는 거의 없기에 nullable로 섫정하였습니다.
-    @Column(nullable=false)
+    @Column(nullable=false,unique=true)
     private String email;
 
     public User() {
     }
+    public User(String email){
+        this.email=email;
+    }
+
 }

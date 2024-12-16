@@ -3,7 +3,9 @@ package spata.schedule2.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import spata.schedule2.dto.LoginResponseDto;
 import spata.schedule2.dto.UserResponseDto;
 import spata.schedule2.entity.User;
 import spata.schedule2.repository.UserRepository;
@@ -23,7 +25,7 @@ public class UserServiceImpl implements UserService {
         User user = new User(UUID.randomUUID().toString(),username,password,email);
         User savedUser = userRepository.save(user);
         return  new UserResponseDto(
-                savedUser.getUserId(),
+                savedUser.getUserid(),
                 savedUser.getUsername(),
                 savedUser.getEmail(),
                 savedUser.getCreateAt());
@@ -35,7 +37,7 @@ public class UserServiceImpl implements UserService {
                 (new ResponseStatusException(HttpStatus.NOT_FOUND,"does not exist userid")));
 
         return new UserResponseDto(
-                user.getUserId(),
+                user.getUserid(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getCreateAt());
@@ -49,7 +51,7 @@ public class UserServiceImpl implements UserService {
             user.setEmail(email);
 
         return new UserResponseDto(
-                user.getUserId(),
+                user.getUserid(),
                 user.getUsername(),
                 user.getEmail(),
                 user.getCreateAt());
@@ -68,15 +70,52 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public boolean signUp(String username, String password, String email) {
+        if(checkEmail(email).getEmail().equals(email)){
+            return false;
+        }else {
+            createUser(username,password,email);
+        }
+        return true;
+    }
+
+    @Override
+    public LoginResponseDto userLogin(String email, String password) {
+            User user = checkEmail(email);
+        if(user.getPassword().equals(password)){
+            return new LoginResponseDto(user.getUserid());
+        }
+        return new LoginResponseDto("LoginFailed");
+    }
+
+    @Transactional
+    @Override
+    public UserResponseDto modifyUserPasswordById(String id, String password) {
+        User user = userRepository.findById(id).orElseThrow(() ->
+                (new ResponseStatusException(HttpStatus.NOT_FOUND,"does not exist userid")));
+        user.setPassword(password);
+        return new UserResponseDto(
+                user.getUserid(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getCreateAt());
+    }
+
     public List<UserResponseDto> UserList_To_UserResponseDto_list(List<User> user_List){
         List<UserResponseDto> userResponseDto_List = new ArrayList<>();
         for(User user : user_List){
             userResponseDto_List.add(new UserResponseDto(
-                    user.getUserId(),
+                    user.getUserid(),
                     user.getUsername(),
                     user.getEmail(),
                     user.getCreateAt()));
         }
         return userResponseDto_List;
+    }
+
+
+    private User checkEmail(String email){
+        return userRepository.findByEmail(email).orElse(new User("NoEmail"));
     }
 }

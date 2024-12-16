@@ -1,5 +1,6 @@
 package spata.schedule2.service;
 
+import spata.schedule2.dto.LoginResponseDto;
 import spata.schedule2.dto.UserResponseDto;
 
 import java.util.List;
@@ -15,4 +16,10 @@ public interface UserService {
     void deleteUserById(String id);
 
     List<UserResponseDto> findUserByAll();
+
+    boolean signUp(String username,String password,String email);
+
+    LoginResponseDto userLogin(String email, String password);
+
+    UserResponseDto modifyUserPasswordById(String id, String password);
 }

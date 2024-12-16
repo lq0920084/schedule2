@@ -17,10 +17,10 @@ public class Schedule extends ScheduleDateEntity {
     private long id;
 
     @ManyToOne
-    @JoinColumn(name="user_id",nullable=false)
+    @JoinColumn(name="userid",nullable=false)
     //ddl-auto값이 Create여야만 합니다.
     @OnDelete(action = OnDeleteAction.CASCADE)
-    private User userId;
+    private User userid;
 
     @Column(nullable=false)
     private String title;
@@ -34,11 +34,12 @@ public class Schedule extends ScheduleDateEntity {
     public Schedule() {
     }
 
-    public Schedule(User userId,
+    public Schedule(User userid,
                     String title,
                     String contents){
-        this.userId=userId;
+        this.userid=userid;
         this.title=title;
         this.contents=contents;
     }
+
 }

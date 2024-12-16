@@ -3,12 +3,14 @@ package spata.schedule2.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 public class ScheduleRequestDto {
 
+    private Long id;
     //이제 유저이름 대신 유저고유식별자를 받습니다.
     private String userid;
 
@@ -22,6 +24,10 @@ public class ScheduleRequestDto {
     public ScheduleRequestDto(String title,String contents){
         this.title=title;
         this.contents=contents;
+    }
+
+    public ScheduleRequestDto(String userid){
+        this.userid=userid;
     }
 
 
