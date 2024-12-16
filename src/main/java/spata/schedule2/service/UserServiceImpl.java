@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
                 user.getCreateAt());
     }
 
+    @Transactional
     @Override
     public boolean modifyUserById(String id, UserRequestDto userRequestDto) {
         User user = findUserID_to_User(id);
@@ -128,7 +129,7 @@ public class UserServiceImpl implements UserService {
 
 
     private User checkEmail(String email) {
-        return userRepository.findByEmail(email).orElse(new User("NoEmail"));
+        return userRepository.findByEmail(email).orElse(new User("nodata","nodata","nodata","NoEmail"));
     }
 
     private User findUserID_to_User(String id){
