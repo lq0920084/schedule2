@@ -42,7 +42,6 @@ public class UserServiceImpl implements UserService {
                 user.getCreateAt());
     }
 
-    @Transactional
     @Override
     public boolean modifyUserById(String id, UserRequestDto userRequestDto) {
         User user = findUserID_to_User(id);
@@ -50,6 +49,7 @@ public class UserServiceImpl implements UserService {
             if (checkEmail(userRequestDto.getEmail()).getEmail().equals("NoEmail")) {
                 user.setUsername(userRequestDto.getUsername());
                 user.setEmail(userRequestDto.getEmail());
+                userRepository.save(user);
                 return true;
             } else {
                 return false;
