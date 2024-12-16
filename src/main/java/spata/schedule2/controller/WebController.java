@@ -36,7 +36,7 @@ public class WebController {
     public String signupPostView(@ModelAttribute @Validated UserRequestDto request, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
 
-            model.addAttribute("message", "입력된 값이 유효한 형식이 아닙니다.");
+            model.addAttribute("message", bindingResult.getFieldError());
         } else {
             if (userService.signUp(request)) {
                 model.addAttribute("message", "회원가입에 성공했습니다.");
@@ -190,6 +190,7 @@ public class WebController {
     public String changeUserDataView(Model model){
         return "changeuserdata";
     }
+
     @PostMapping("/changeuserdata")
     public String changeUserData(UserRequestDto dto,Model model,HttpServletRequest request){
         HttpSession session = request.getSession(false);
@@ -204,5 +205,24 @@ public class WebController {
         return "changeuserdata";
     }
 
+    @GetMapping("/resignuser")
+    public String resignUserview(Model model){
+        return "resign";
+    }
+
+    @PostMapping("/resignuser")
+    public String resignUser(ResignUserRequestDto dto,Model model,HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(userService.resignUser((String)session.getAttribute("userid"),dto)){
+            model.addAttribute("message","그 동안 저희 사이트를 이용해주셔서 감사합니다. 다시 만나 뵙기를 기원하겠습니다.");
+            model.addAttribute("checkresign",true);
+            model.addAttribute("resignUrl","/web/logout");
+            return "resign";
+
+        }else {
+            model.addAttribute("message","잘못된 요청입니다.");
+            return "resign";
+        }
+    }
 
 }

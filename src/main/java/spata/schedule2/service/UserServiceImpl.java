@@ -34,9 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto findUserById(String id) {
-        User user = userRepository.findById(id).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
-
+        User user = findUserID_to_User(id);
         return new UserResponseDto(
                 user.getUserid(),
                 user.getUsername(),
@@ -46,8 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean modifyUserById(String id, UserRequestDto userRequestDto) {
-        User user = userRepository.findById(id).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
+        User user = findUserID_to_User(id);
         if (user.getPassword().equals(userRequestDto.getPassword())) {
             if (checkEmail(userRequestDto.getEmail()).getEmail().equals("NoEmail")) {
                 user.setUsername(userRequestDto.getUsername());
@@ -97,12 +94,22 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public boolean modifyUserPasswordById(String id, UserPasswordRequestDto dto) {
-        User user = userRepository.findById(id).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
+        User user = findUserID_to_User(id);
         if (user.getPassword().equals(dto.getCurrent_password())) {
             user.setPassword(dto.getNew_password());
             return true;
         } else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean resignUser(String id, ResignUserRequestDto dto) {
+        User user = findUserID_to_User(id);
+        if(user.getPassword().equals(dto.getPassword())){
+            deleteUserById(id);
+            return true;
+        }else {
             return false;
         }
     }
@@ -122,5 +129,10 @@ public class UserServiceImpl implements UserService {
 
     private User checkEmail(String email) {
         return userRepository.findByEmail(email).orElse(new User("NoEmail"));
+    }
+
+    private User findUserID_to_User(String id){
+        return userRepository.findById(id).orElseThrow(() ->
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
     }
 }

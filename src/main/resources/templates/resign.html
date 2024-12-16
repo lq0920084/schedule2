@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<HTML lang="ko" xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <meta charset="UTF-8">
+    <title>회원탈퇴</title>
+</HEAD>
+<BODY>
+<H2>회원탈퇴</H2>
+<form th:action="@{/web/resignuser}" method="post">
+    <div>
+        <label for="password">기존암호를 입력해주세요.</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <button type="submit" name="id">회원탈퇴</button>
+</form>
+<script th:inline="javascript">
+    let message = [[${message}]]
+    if(message!=null) {
+        alert(message);
+    }
+    if([[${checkresign}]]){
+        location.replace([[${resignUrl}]]);
+    }
+</script>
+</BODY>
+</HTML>

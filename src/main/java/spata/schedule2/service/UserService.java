@@ -21,4 +21,6 @@ public interface UserService {
     LoginResponseDto userLogin(LoginRequestDto loginRequestDto);
 
     boolean modifyUserPasswordById(String id, UserPasswordRequestDto dto);
+
+    boolean resignUser(String userid,ResignUserRequestDto dto);
 }
