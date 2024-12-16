@@ -26,9 +26,6 @@ public class ScheduleRequestDto {
         this.contents=contents;
     }
 
-    public ScheduleRequestDto(String userid){
-        this.userid=userid;
-    }
 
 
 }

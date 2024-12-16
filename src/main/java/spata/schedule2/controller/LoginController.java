@@ -24,6 +24,7 @@ public class LoginController {
     private final UserService userService;
     private final ScheduleService scheduleService;
 
+    //회원가입 페이지 표시.
     @GetMapping("/signup")
     public String singupView(Model model) {
 
@@ -45,17 +46,16 @@ public class LoginController {
                 model.addAttribute("message", "이메일이 중복됩니다. 다시 확인해주세요.");
             }
         }
-
         return "signup";
     }
 
-
+    //로그인 페이지 표시.
     @GetMapping("/login")
     public String loginView(Model model) {
         return "login";
     }
 
-
+    //사용자로부터 이메일과 비밀번호를 받아 로그인 세션 생성.
     @PostMapping("/login")
     public String loginPostView(@ModelAttribute LoginRequestDto dto, Model model, HttpServletRequest request) {
         HttpSession session;
@@ -72,25 +72,31 @@ public class LoginController {
         return "login";
     }
 
+    //로그인된 세션에서 uuid로 된 userid를 받아와서 전체 일정목록표시.
     @GetMapping("/schedule")
     public String scheduleList(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        UserResponseDto user =  userService.findUserById((String)session.getAttribute("userid"));
         List<ScheduleResponseDto> scheduleList = scheduleService.findScheduleByUserid((String) session.getAttribute("userid"));
         if (scheduleList.isEmpty()) {
+            model.addAttribute("name",user.getUsername());
             model.addAttribute("response", "NoData");
         } else {
+            model.addAttribute("name",user.getUsername());
             model.addAttribute("results", scheduleList);
         }
         return "schedule";
     }
 
+    //새일정 추가 페이지 표시.
     @GetMapping("/newSchedule")
     public String createScheduleView(Model model) {
         return "newschedule";
     }
 
+    //새 일정을 추기하기 위해 세션으로부터 받은 userid를 기반으로  새일정 추가.
     @PostMapping("/createSchedule")
-    public String createSchedule(ScheduleRequestDto dto, Model model, HttpServletRequest request) {
+    public String createSchedule(CreateScheduleRequestDto dto, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
        scheduleService.createSchedule((String) session.getAttribute("userid"), dto.getTitle(), dto.getContents());
         model.addAttribute("message","일정이 추가되었습니다.");
@@ -100,6 +106,7 @@ public class LoginController {
     return "newschedule";
     }
 
+    //세션으로부터 받은 userid와 일정의 번호를 받아서 변조되지 않은 경우에만 일정을 삭제.
     @PostMapping("/delete")
     public String removeSchedule(ScheduleRequestDto dto,Model model,HttpServletRequest request){
         HttpSession session = request.getSession(false);
@@ -113,6 +120,8 @@ public class LoginController {
 
         return "schedule";
     }
+
+    //일정 수정페이지로 진입하기 전, 세션id  위변조 확인 후 진입.
     @PostMapping("/modify")
     public String modifyView(ScheduleRequestDto dto,Model model,HttpServletRequest request){
         HttpSession session = request.getSession(false);
@@ -127,13 +136,12 @@ public class LoginController {
 
 
     }
+
+    //일정id와 세션id 위변조 확인 후 일치하는 경우에만 일정 수정.
     @PostMapping("/modifySchedule")
-    public String modifySchedule(ScheduleRequestDto dto,Model model,HttpServletRequest request){
+    public String modifySchedule(ModifyScheduleRequestDto dto, Model model, HttpServletRequest request){
         HttpSession session = request.getSession(false);
-        System.out.println(dto.getId());
-        System.out.println(dto.getTitle());
-        System.out.println(dto.getContents());
-        System.out.println(session.getAttribute("userid"));
+
         ScheduleResponseDto scheduleResponseDto = scheduleService.modifyScheduleByIdCheckUser(
                 (String)session.getAttribute("userid"),
                 dto.getId(),
@@ -151,12 +159,50 @@ public class LoginController {
 
         return "modifyschedule";
     }
-    @GetMapping("logout")
+
+    //만들어진 세션을 삭제 후 로그인 페이지로 리다이렉트.
+    @GetMapping("/logout")
         public String logout(Model model,HttpServletRequest request){
         HttpSession session = request.getSession();
             session.invalidate();
             return "redirect:/web/login";
-
         }
+    @GetMapping("/changepassword")
+    public String changePasswordView(Model model){
+        return "changepassword";
+    }
+
+    @PostMapping("/changepassword")
+    public String changePassword(UserPasswordRequestDto dto,Model model,HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(userService.modifyUserPasswordById((String)session.getAttribute("userid"),dto)){
+            model.addAttribute("message", "비밀번호가 정상적으로 수정되었습니다. 로그인페이지로 이동합니다.");
+            model.addAttribute("chekModify",true);
+            model.addAttribute("scheduleUrl","/web/logout");
+        }else {
+            model.addAttribute("message", "현재 비밀번호가 다릅니다.");
+            model.addAttribute("chekModify",false);
+        }
+        return "/changepassword";
+    }
+
+    @GetMapping("/changeuserdata")
+    public String changeUserDataView(Model model){
+        return "changeuserdata";
+    }
+    @PostMapping("/changeuserdata")
+    public String changeUserData(UserRequestDto dto,Model model,HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(userService.modifyUserById((String)session.getAttribute("userid"),dto)) {
+            model.addAttribute("message", "이름과 이메일이 정상적으로 수정되었습니다. 로그인페이지로 이동합니다.");
+            model.addAttribute("chekModify",true);
+            model.addAttribute("scheduleUrl","/web/logout");
+        }else {
+            model.addAttribute("message", "현재 비밀번호가 다르거나, 이메일이 중복됩니다.");
+            model.addAttribute("chekModify",false);
+        }
+        return "changeuserdata";
+    }
+
 
 }

@@ -14,9 +14,9 @@ import lombok.Setter;
 public class UserRequestDto {
     @NotNull
     private String username;
-    @NotNull
-    private String password;
     @Email
     private String email;
+    @NotNull
+    private String password;
 }
 

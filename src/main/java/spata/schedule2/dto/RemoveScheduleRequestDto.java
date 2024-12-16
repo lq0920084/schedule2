@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserPasswordRequestDto {
-    private String current_password;
-    private String new_password;
+public class RemoveScheduleRequestDto {
+    private String userid;
+    private Long id;
 }

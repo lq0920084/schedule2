@@ -5,7 +5,8 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class ScheduleWebRequestDto {
+public class ModifyScheduleRequestDto {
+    private Long id;
     private String title;
     private String contents;
 }

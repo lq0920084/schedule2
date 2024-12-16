@@ -10,7 +10,7 @@ public interface UserService {
 
     UserResponseDto findUserById(String id);
 
-    UserResponseDto modifyUserById(String id,UserModifyRequestDto userModifyRequestDto);
+    boolean modifyUserById(String id, UserRequestDto userRequestDto);
 
     void deleteUserById(String id);
 
@@ -20,5 +20,5 @@ public interface UserService {
 
     LoginResponseDto userLogin(LoginRequestDto loginRequestDto);
 
-    UserResponseDto modifyUserPasswordById(String id, UserPasswordRequestDto dto);
+    boolean modifyUserPasswordById(String id, UserPasswordRequestDto dto);
 }

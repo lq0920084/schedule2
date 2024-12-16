@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserModifyRequestDto {
-    private String username;
-    private String email;
+public class CreateScheduleRequestDto {
+    private String title;
+    private String contents;
 }

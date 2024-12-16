@@ -21,11 +21,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
-        User user = new User(UUID.randomUUID().toString(),userRequestDto.getUsername(),
-                                                        userRequestDto.getPassword(),
-                                                        userRequestDto.getEmail());
+        User user = new User(UUID.randomUUID().toString(), userRequestDto.getUsername(),
+                userRequestDto.getPassword(),
+                userRequestDto.getEmail());
         User savedUser = userRepository.save(user);
-        return  new UserResponseDto(
+        return new UserResponseDto(
                 savedUser.getUserid(),
                 savedUser.getUsername(),
                 savedUser.getEmail(),
@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto findUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND,"does not exist userid")));
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
 
         return new UserResponseDto(
                 user.getUserid(),
@@ -45,37 +45,41 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponseDto modifyUserById(String id, UserModifyRequestDto userModifyRequestDto) {
+    public boolean modifyUserById(String id, UserRequestDto userRequestDto) {
         User user = userRepository.findById(id).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND,"does not exist userid")));
-            user.setUsername(userModifyRequestDto.getUsername());
-            user.setEmail(userModifyRequestDto.getEmail());
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
+        if (user.getPassword().equals(userRequestDto.getPassword())) {
+            if (checkEmail(userRequestDto.getEmail()).getEmail().equals("NoEmail")) {
+                user.setUsername(userRequestDto.getUsername());
+                user.setEmail(userRequestDto.getEmail());
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
 
-        return new UserResponseDto(
-                user.getUserid(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getCreateAt());
     }
 
     @Override
     public void deleteUserById(String id) {
         userRepository.findById(id).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND,"does not exist userid")));
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
         userRepository.deleteById(id);
     }
 
     @Override
-    public List<UserResponseDto> findUserByAll(){
-            return UserList_To_UserResponseDto_list(userRepository.findAll());
+    public List<UserResponseDto> findUserByAll() {
+        return UserList_To_UserResponseDto_list(userRepository.findAll());
 
     }
 
     @Override
     public boolean signUp(UserRequestDto userRequestDto) {
-        if(checkEmail(userRequestDto.getEmail()).getEmail().equals(userRequestDto.getEmail())){
+        if (checkEmail(userRequestDto.getEmail()).getEmail().equals(userRequestDto.getEmail())) {
             return false;
-        }else {
+        } else {
             createUser(userRequestDto);
         }
         return true;
@@ -83,8 +87,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LoginResponseDto userLogin(LoginRequestDto loginRequestDto) {
-            User user = checkEmail(loginRequestDto.getEmail());
-        if(user.getPassword().equals(loginRequestDto.getPassword())){
+        User user = checkEmail(loginRequestDto.getEmail());
+        if (user.getPassword().equals(loginRequestDto.getPassword())) {
             return new LoginResponseDto(user.getUserid());
         }
         return new LoginResponseDto("LoginFailed");
@@ -92,20 +96,20 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponseDto modifyUserPasswordById(String id, UserPasswordRequestDto dto ) {
+    public boolean modifyUserPasswordById(String id, UserPasswordRequestDto dto) {
         User user = userRepository.findById(id).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND,"does not exist userid")));
-        user.setPassword(dto.getPassword());
-        return new UserResponseDto(
-                user.getUserid(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getCreateAt());
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
+        if (user.getPassword().equals(dto.getCurrent_password())) {
+            user.setPassword(dto.getNew_password());
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public List<UserResponseDto> UserList_To_UserResponseDto_list(List<User> user_List){
+    public List<UserResponseDto> UserList_To_UserResponseDto_list(List<User> user_List) {
         List<UserResponseDto> userResponseDto_List = new ArrayList<>();
-        for(User user : user_List){
+        for (User user : user_List) {
             userResponseDto_List.add(new UserResponseDto(
                     user.getUserid(),
                     user.getUsername(),
@@ -116,7 +120,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    private User checkEmail(String email){
+    private User checkEmail(String email) {
         return userRepository.findByEmail(email).orElse(new User("NoEmail"));
     }
 }

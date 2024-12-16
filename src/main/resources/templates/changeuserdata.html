@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<HTML lang="ko" xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <meta charset="UTF-8">
+    <title>사용자이름,이메일변경</title>
+</HEAD>
+<BODY>
+<H2>사용자이름,이메일변경</H2>
+<form th:action="@{/web/changeuserdata}" method="post">
+    <div>
+        <label for="password">기존암호를 입력해주세요.</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+        <label for="email">새로운 이메일을 입력해주세요.</label>
+        <input type="text" id="email" name="email"  required>
+    </div>
+    <div>
+        <label for="username">새로운 이름을 입력해주세요.</label>
+        <input type="text" id="username" name="username"  required>
+    </div>
+    <button type="submit" name="id">이름,이메일 변경</button>
+</form>
+<script th:inline="javascript">
+    let message = [[${message}]]
+    if(message!=null) {
+        alert(message);
+    }
+    if([[${chekModify}]]){
+        location.replace([[${scheduleUrl}]]);
+    }
+</script>
+</BODY>
+</HTML>

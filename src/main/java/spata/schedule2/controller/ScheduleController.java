@@ -7,10 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import spata.schedule2.dto.LoginRequestDto;
-import spata.schedule2.dto.LoginResponseDto;
-import spata.schedule2.dto.ScheduleRequestDto;
-import spata.schedule2.dto.ScheduleResponseDto;
+import spata.schedule2.dto.*;
 import spata.schedule2.service.ScheduleService;
 import spata.schedule2.service.UserService;
 
@@ -39,7 +36,7 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto dto, HttpServletRequest request) {
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody CreateScheduleRequestDto dto, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         return new ResponseEntity<>(scheduleService.createSchedule(
                 (String)session.getAttribute("userid"),

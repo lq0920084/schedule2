@@ -5,6 +5,7 @@
     <title>일정목록</title>
 </HEAD>
 <BODY>
+<div th:text="|${name}님 어서오세요.|"></div>
 <H2>일정목록</H2>
 <table>
 <tbody style="text-align:center; border: 1px solid black">
@@ -34,7 +35,9 @@
         </form></td>
     </tr>
     <td><span><button th:onclick="|location.href='@{/web/newSchedule}'|">새일정추가</button></span></td>
-    <td><span><button th:onclick="|location.href='@{/web/logout}'|">로그아웃</button></span></td>
+    <td><button th:onclick="|location.href='@{/web/logout}'|">로그아웃</button></td>
+    <td><button th:onclick="|location.href='@{/web/changepassword}'|">사용자비밀번호변경</button></td>
+    <td><button th:onclick="|location.href='@{/web/changeuserdata}'|">사용자이름과 이메일변경</button></td>
 </tbody>
 </table>
 <script th:inline="javascript">
