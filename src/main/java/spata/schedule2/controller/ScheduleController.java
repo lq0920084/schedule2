@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import spata.schedule2.dto.*;
 import spata.schedule2.service.ScheduleService;
@@ -36,12 +39,21 @@ public class ScheduleController {
     }
 
     @PostMapping
-    public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody CreateScheduleRequestDto dto, HttpServletRequest request) {
+    public ResponseEntity<ScheduleResponseDto> createSchedule(@Validated @RequestBody CreateScheduleRequestDto dto, BindingResult bindingResult, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
+        if (bindingResult.hasErrors()) {
+            for(FieldError fieldError : bindingResult.getFieldErrors()) {
+                if(fieldError.getCode().equals("ScheduleTitleVerification")) {
+                    log.info(fieldError.getDefaultMessage());
+                }
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
         return new ResponseEntity<>(scheduleService.createSchedule(
                 (String)session.getAttribute("userid"),
                 dto.getTitle(),
                 dto.getContents()),HttpStatus.CREATED);
+    }
     }
 
     @GetMapping("/{id}")
@@ -50,9 +62,17 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> modifyScheduleById(@PathVariable Long id,@RequestBody ScheduleRequestDto dto) {
-
-        return new ResponseEntity<>(scheduleService.modifyScheduleById(id,dto.getTitle(),dto.getContents()),HttpStatus.OK);
+    public ResponseEntity<ScheduleResponseDto> modifyScheduleById(@PathVariable Long id,@Validated @RequestBody ScheduleRequestDto dto,BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                if (fieldError.getCode().equals("ScheduleTitleVerification")) {
+                    log.info(fieldError.getDefaultMessage());
+                }
+            }
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(scheduleService.modifyScheduleById(id, dto.getTitle(), dto.getContents()), HttpStatus.OK);
+        }
     }
 
     @DeleteMapping("{id}")

@@ -7,14 +7,17 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import spata.schedule2.Validation.EmailVerification;
+import spata.schedule2.Validation.UsernameVerification;
 
 
 @Getter
 @AllArgsConstructor
 public class UserRequestDto {
     @NotNull
+    @UsernameVerification
     private String username;
-    @Email
+    @EmailVerification
     private String email;
     @NotNull
     private String password;

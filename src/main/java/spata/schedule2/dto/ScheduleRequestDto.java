@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import spata.schedule2.Validation.ScheduleTitleVerification;
 
 @Setter
 @Getter
@@ -16,6 +17,7 @@ public class ScheduleRequestDto {
 
     //유저이름은 user테이블로 이동되었으므로 더 이상 여기서 수정할 수 없습니다.
 
+    @ScheduleTitleVerification
     private String title;
 
     private String contents;
