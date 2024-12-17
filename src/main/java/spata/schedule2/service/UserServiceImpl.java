@@ -9,6 +9,10 @@ import spata.schedule2.dto.*;
 import spata.schedule2.entity.User;
 import spata.schedule2.repository.UserRepository;
 
+import java.math.BigInteger;
+import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +26,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto createUser(UserRequestDto userRequestDto) {
         User user = new User(UUID.randomUUID().toString(), userRequestDto.getUsername(),
-                userRequestDto.getPassword(),
+                encryptPassword(userRequestDto.getPassword()),
                 userRequestDto.getEmail());
         User savedUser = userRepository.save(user);
         return new UserResponseDto(
@@ -45,7 +49,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean modifyUserById(String id, UserRequestDto userRequestDto) {
         User user = findUserID_to_User(id);
-        if (user.getPassword().equals(userRequestDto.getPassword())) {
+        if (user.getPassword().equals(encryptPassword(userRequestDto.getPassword()))) {
             if (checkEmail(userRequestDto.getEmail()).getEmail().equals("NoEmail")) {
                 user.setUsername(userRequestDto.getUsername());
                 user.setEmail(userRequestDto.getEmail());
@@ -86,7 +90,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public LoginResponseDto userLogin(LoginRequestDto loginRequestDto) {
         User user = checkEmail(loginRequestDto.getEmail());
-        if (user.getPassword().equals(loginRequestDto.getPassword())) {
+        if (user.getPassword().equals(encryptPassword(loginRequestDto.getPassword()))) {
             return new LoginResponseDto(user.getUserid());
         }
         return new LoginResponseDto("LoginFailed");
@@ -96,8 +100,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean modifyUserPasswordById(String id, UserPasswordRequestDto dto) {
         User user = findUserID_to_User(id);
-        if (user.getPassword().equals(dto.getCurrent_password())) {
-            user.setPassword(dto.getNew_password());
+        if (user.getPassword().equals(encryptPassword(dto.getCurrent_password()))) {
+            user.setPassword(encryptPassword(dto.getNew_password()));
             return true;
         } else {
             return false;
@@ -107,7 +111,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean resignUser(String id, ResignUserRequestDto dto) {
         User user = findUserID_to_User(id);
-        if(user.getPassword().equals(dto.getPassword())){
+        if(user.getPassword().equals(encryptPassword(dto.getPassword()))){
             deleteUserById(id);
             return true;
         }else {
@@ -135,5 +139,16 @@ public class UserServiceImpl implements UserService {
     private User findUserID_to_User(String id){
         return userRepository.findById(id).orElseThrow(() ->
                 (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
+    }
+    private String encryptPassword(String password){
+        //암호로 레인보우 테이블을 생성할 수 없도록 Salt를 추가합니다.
+        password = password+"sparta";
+        try {
+            MessageDigest encryptInstance = MessageDigest.getInstance("SHA-256");
+            byte[] encryptedPasswordToByte = encryptInstance.digest(password.getBytes(Charset.forName("UTF-8")));
+            return String.format("%032X",new BigInteger(1,encryptedPasswordToByte));
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
