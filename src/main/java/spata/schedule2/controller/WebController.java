@@ -83,7 +83,7 @@ public class WebController {
     public String scheduleList(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         UserResponseDto user =  userService.findUserById((String)session.getAttribute("userid"));
-        List<ScheduleResponseDto> scheduleList = scheduleService.findScheduleByUserid((String) session.getAttribute("userid"));
+        List<ScheduleResponseDto> scheduleList = scheduleService.findScheduleByAll();
         if (scheduleList.isEmpty()) {
             model.addAttribute("name",user.getUsername());
             model.addAttribute("response", "NoData");
@@ -128,7 +128,9 @@ public class WebController {
             model.addAttribute("checkScheduleList", true);
             model.addAttribute("ScheduleListUrl","/web/schedule");
         }else{
-            model.addAttribute("message","해당하는 일정이 없습니다..");
+            model.addAttribute("message","삭제할 권한이 없습니다.");
+            model.addAttribute("checkScheduleList",true);
+            model.addAttribute("ScheduleListUrl","/web/schedule");
         }
 
         return "schedule";
@@ -143,9 +145,15 @@ public class WebController {
                 model.addAttribute("title", scheduleResponseDto.getTitle());
                 model.addAttribute("contents", scheduleResponseDto.getContents());
                 model.addAttribute("id", scheduleResponseDto.getId());
+                return "modifyschedule";
+            }else {
+                model.addAttribute("message","수정할 권한이 없습니다.");
+                model.addAttribute("checkScheduleList",true);
+                model.addAttribute("ScheduleListUrl","/web/schedule");
+                return "schedule";
             }
 
-        return "modifyschedule";
+
 
 
     }

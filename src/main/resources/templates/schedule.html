@@ -23,7 +23,7 @@
     </tr>
     <tr th:each="result : ${results}" style="text-align:center; border: 1px solid black">
         <td> <span th:text="${result.username}"> 작성자 </span></td>
-        <td> <span style="font-weight:bold" th:text="${result.title}"> 제목 </span></td>
+        <td> <span style="font-weight:bold"  th:text="${result.title}"> 제목 </span></td>
         <td> <span th:text="${result.contents}"> 일정내용 </span></td>
         <td> <span th:text="${result.createAt}"> 작성일과 작성시간 </span></td>
         <td> <span th:text="${result.modifiedAt}"> 수정일과 수정시간 </span></td>
@@ -32,6 +32,9 @@
         </form>
             <form th:action="@{/web/delete}" method="post">
             <button type="submit" name="id" th:value="${result.id}">일정삭제</button>
+        </form>
+        <form th:action="@{/web/comment}" method="get">
+        <button type="submit" name="id" th:value=${result.id}>덧글확인</button>
         </form></td>
     </tr>
     <td><span><button th:onclick="|location.href='@{/web/newSchedule}'|">새일정추가</button></span></td>
