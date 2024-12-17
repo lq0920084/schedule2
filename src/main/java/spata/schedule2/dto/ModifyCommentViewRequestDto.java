@@ -3,8 +3,9 @@ package spata.schedule2.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@Getter
 @AllArgsConstructor
-public class RemoveScheduleRequestDto {
-    private Long id;
+@Getter
+public class ModifyCommentViewRequestDto {
+    private Long commentid;
+
 }

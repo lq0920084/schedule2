@@ -1,5 +1,6 @@
 package spata.schedule2.service;
 
+import spata.schedule2.dto.RemoveScheduleRequestDto;
 import spata.schedule2.dto.ScheduleResponseDto;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface ScheduleService {
 
     void removeScheduleById(Long id);
 
-    boolean removeScheduleByIdCheckUser(String userid,Long id);
+    boolean removeScheduleByIdCheckUser(String userid, RemoveScheduleRequestDto dto);
 
     boolean findScheduleByIdCheckUser(String userid,Long id);
 
@@ -22,5 +23,4 @@ public interface ScheduleService {
 
     List<ScheduleResponseDto> findScheduleByAll();
 
-    List<ScheduleResponseDto> findScheduleByUserid(String userId);
 }

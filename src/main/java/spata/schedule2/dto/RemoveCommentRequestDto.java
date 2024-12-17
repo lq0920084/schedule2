@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RemoveScheduleRequestDto {
-    private Long id;
+public class RemoveCommentRequestDto {
+    private Long commentid;
 }

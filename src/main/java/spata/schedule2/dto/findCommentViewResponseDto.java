@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RemoveScheduleRequestDto {
-    private Long id;
+public class findCommentViewResponseDto {
+private Long commentid;
+private String comment;
 }

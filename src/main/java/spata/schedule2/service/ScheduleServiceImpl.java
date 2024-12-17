@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import spata.schedule2.dto.RemoveScheduleRequestDto;
 import spata.schedule2.dto.ScheduleResponseDto;
 import spata.schedule2.entity.Schedule;
 import spata.schedule2.entity.User;
@@ -85,9 +86,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public boolean removeScheduleByIdCheckUser(String userid, Long id) {
-        if(findScheduleByIdCheckUser(userid,id)){
-            scheduleRepository.deleteById(id);
+    public boolean removeScheduleByIdCheckUser(String userid, RemoveScheduleRequestDto dto) {
+        if(findScheduleByIdCheckUser(userid,dto.getId())){
+            scheduleRepository.deleteById(dto.getId());
             return true;
         }else {
             return false;
@@ -120,12 +121,12 @@ public class ScheduleServiceImpl implements ScheduleService {
         return scheduleList_To_ScheduleResponseDto(scheduleRepository.findAll());
     }
 
-    @Override
-    public List<ScheduleResponseDto> findScheduleByUserid(String userid) {
-        User user = new User();
-        user.setUserid(userid);
-        return scheduleList_To_ScheduleResponseDto(scheduleRepository.findAllByUserid(user));
-    }
+//    @Override
+//    public List<ScheduleResponseDto> findScheduleByUserid(String userid) {
+//        User user = new User();
+//        user.setUserid(userid);
+//        return scheduleList_To_ScheduleResponseDto(scheduleRepository.findAllByUserid(user));
+//    }
 
     private List<ScheduleResponseDto> scheduleList_To_ScheduleResponseDto(List<Schedule> schedule_list) {
         List<ScheduleResponseDto> scheduleResponseDto_list = new ArrayList<>();

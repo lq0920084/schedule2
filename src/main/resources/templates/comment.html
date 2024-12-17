@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<HTML lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="">
+<HEAD>
+    <meta charset="UTF-8">
+    <title>덧글목록</title>
+</HEAD>
+<BODY>
+<H2>덧글</H2>
+<form th:action="@{/web/comment}" method="post">
+    <div>
+        <label for="comment">덧글 내용</label>
+        <input type="text" id="comment" name="comment" th:value="${comment}" required>
+    </div>
+    <button type="submit" name="scheduleid" th:value="${id}">덧글추가</button>
+</form>
+<table>
+    <tbody style="text-align:center; border: 1px solid black">
+    <tr th:if="${response=='NoData'}" style="text-align:center; border: 1px solid black">
+        <td><span> 덧글이 없습니다. 새 덧글을 작성하려면 위 버튼을 눌러주세요.</span></td>
+    </tr>
+    <tr th:if="${response!='NoData'}" style="text-align:center; border: 1px solid black">
+        <td> <span> 작성자 </span></td>
+        <td> <span> 덧글내용 </span></td>
+        <td> <span> 작성일과 작성시간 </span></td>
+        <td> <span> 수정일과 수정시간 </span></td>
+    </tr>
+    <tr th:each="result : ${results}" style="text-align:center; border: 1px solid black">
+        <td> <span th:text="${result.username}"> 작성자 </span></td>
+        <td> <span style="font-weight:bold"  th:text="${result.comment}"> 덧글 내용 </span></td>
+        <td> <span th:text="${result.createAt}"> 작성일과 작성시간 </span></td>
+        <td> <span th:text="${result.modifiedAt}"> 수정일과 수정시간 </span></td>
+        <td><form th:action="@{/web/comment/modifyview}" method="post">
+            <button type="submit" name="commentid" th:value="${result.commentid}">덧글수정</button>
+        </form>
+            <form th:action="@{/web/comment/delete}" method="post">
+                <button type="submit" name="commentid" th:value="${result.commentid}">덧글삭제</button>
+            </form></td>
+    </tr>
+    <td><button th:onclick="|location.href='@{/web/schedule}'|">일정목록으로 돌아가기</button></td>
+    </tbody>
+</table>
+<script th:inline="javascript">
+    let message = [[${message}]]
+    if(message!=null) {
+        alert(message);
+    }
+    if([[${checkCommentList}]]){
+        location.replace([[${CommentListUrl}]]);
+    }
+</script>
+</BODY>
+</HTML>

@@ -5,6 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class RemoveScheduleRequestDto {
-    private Long id;
+public class CreateCommentRequestDto {
+    private Long scheduleid;
+    private String comment;
+
+
 }

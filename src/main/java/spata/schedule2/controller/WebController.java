@@ -8,11 +8,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import spata.schedule2.dto.*;
+import spata.schedule2.service.CommentService;
 import spata.schedule2.service.ScheduleService;
 import spata.schedule2.service.UserService;
 
@@ -36,14 +34,14 @@ public class WebController {
     //비어있지 않은지, 이메일은 형식에 맞는지 검사합니다.
     public String signupPostView(@ModelAttribute @Validated UserRequestDto request, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            for(FieldError fieldError : bindingResult.getFieldErrors()) {
-                if(fieldError.getCode().equals("EmailVerification")) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                if (fieldError.getCode().equals("EmailVerification")) {
                     model.addAttribute("message", fieldError.getDefaultMessage());
-                    }else {
-                    model.addAttribute("message2",fieldError.getDefaultMessage());
+                } else {
+                    model.addAttribute("message2", fieldError.getDefaultMessage());
                 }
-                }
-            } else {
+            }
+        } else {
             if (userService.signUp(request)) {
                 model.addAttribute("message", "회원가입에 성공했습니다.");
                 model.addAttribute("chekSignUp", true);
@@ -82,13 +80,13 @@ public class WebController {
     @GetMapping("/schedule")
     public String scheduleList(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        UserResponseDto user =  userService.findUserById((String)session.getAttribute("userid"));
+        UserResponseDto user = userService.findUserById((String) session.getAttribute("userid"));
         List<ScheduleResponseDto> scheduleList = scheduleService.findScheduleByAll();
         if (scheduleList.isEmpty()) {
-            model.addAttribute("name",user.getUsername());
+            model.addAttribute("name", user.getUsername());
             model.addAttribute("response", "NoData");
         } else {
-            model.addAttribute("name",user.getUsername());
+            model.addAttribute("name", user.getUsername());
             model.addAttribute("results", scheduleList);
         }
         return "schedule";
@@ -102,11 +100,11 @@ public class WebController {
 
     //새 일정을 추기하기 위해 세션으로부터 받은 userid를 기반으로  새일정 추가.
     @PostMapping("/createSchedule")
-    public String createSchedule(@ModelAttribute @Validated CreateScheduleRequestDto dto,BindingResult bindingResult, Model model, HttpServletRequest request) {
+    public String createSchedule(@ModelAttribute @Validated CreateScheduleRequestDto dto, BindingResult bindingResult, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (bindingResult.hasErrors()) {
-            for(FieldError fieldError : bindingResult.getFieldErrors()) {
-                if(fieldError.getCode().equals("ScheduleTitleVerification")) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                if (fieldError.getCode().equals("ScheduleTitleVerification")) {
                     model.addAttribute("message", fieldError.getDefaultMessage());
                 }
             }
@@ -116,21 +114,21 @@ public class WebController {
             model.addAttribute("chekCreate", true);
             model.addAttribute("scheduleUrl", "/web/schedule");
         }
-    return "newschedule";
+        return "newschedule";
     }
 
     //세션으로부터 받은 userid와 일정의 번호를 받아서 변조되지 않은 경우에만 일정을 삭제.
     @PostMapping("/delete")
-    public String removeSchedule(ScheduleRequestDto dto,Model model,HttpServletRequest request){
+    public String removeSchedule(RemoveScheduleRequestDto dto, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if(scheduleService.removeScheduleByIdCheckUser((String)session.getAttribute("userid"),dto.getId())){
-            model.addAttribute("message","삭제되었습니다.");
+        if (scheduleService.removeScheduleByIdCheckUser((String) session.getAttribute("userid"), dto)) {
+            model.addAttribute("message", "삭제되었습니다.");
             model.addAttribute("checkScheduleList", true);
-            model.addAttribute("ScheduleListUrl","/web/schedule");
-        }else{
-            model.addAttribute("message","삭제할 권한이 없습니다.");
-            model.addAttribute("checkScheduleList",true);
-            model.addAttribute("ScheduleListUrl","/web/schedule");
+            model.addAttribute("ScheduleListUrl", "/web/schedule");
+        } else {
+            model.addAttribute("message", "삭제할 권한이 없습니다.");
+            model.addAttribute("checkScheduleList", true);
+            model.addAttribute("ScheduleListUrl", "/web/schedule");
         }
 
         return "schedule";
@@ -138,33 +136,31 @@ public class WebController {
 
     //일정 수정페이지로 진입하기 전, 세션id  위변조 확인 후 진입.
     @PostMapping("/modify")
-    public String modifyView( ScheduleRequestDto dto,Model model,HttpServletRequest request){
+    public String modifyView(ModifyScheduleViewRequestDto dto, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-            if (scheduleService.findScheduleByIdCheckUser((String) session.getAttribute("userid"), dto.getId())) {
-                ScheduleResponseDto scheduleResponseDto = scheduleService.findScheduleById(dto.getId());
-                model.addAttribute("title", scheduleResponseDto.getTitle());
-                model.addAttribute("contents", scheduleResponseDto.getContents());
-                model.addAttribute("id", scheduleResponseDto.getId());
-                return "modifyschedule";
-            }else {
-                model.addAttribute("message","수정할 권한이 없습니다.");
-                model.addAttribute("checkScheduleList",true);
-                model.addAttribute("ScheduleListUrl","/web/schedule");
-                return "schedule";
-            }
-
-
+        if (scheduleService.findScheduleByIdCheckUser((String) session.getAttribute("userid"), dto.getId())) {
+            ScheduleResponseDto scheduleResponseDto = scheduleService.findScheduleById(dto.getId());
+            model.addAttribute("title", scheduleResponseDto.getTitle());
+            model.addAttribute("contents", scheduleResponseDto.getContents());
+            model.addAttribute("id", scheduleResponseDto.getId());
+            return "modifyschedule";
+        } else {
+            model.addAttribute("message", "수정할 권한이 없습니다.");
+            model.addAttribute("checkScheduleList", true);
+            model.addAttribute("ScheduleListUrl", "/web/schedule");
+            return "schedule";
+        }
 
 
     }
 
     //일정id와 세션id 위변조 확인 후 일치하는 경우에만 일정 수정.
     @PostMapping("/modifySchedule")
-    public String modifySchedule(@ModelAttribute @Validated ModifyScheduleRequestDto dto,BindingResult bindingResult, Model model, HttpServletRequest request){
+    public String modifySchedule(@ModelAttribute @Validated ModifyScheduleRequestDto dto, BindingResult bindingResult, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (bindingResult.hasErrors()) {
-            for(FieldError fieldError : bindingResult.getFieldErrors()) {
-                if(fieldError.getCode().equals("ScheduleTitleVerification")) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                if (fieldError.getCode().equals("ScheduleTitleVerification")) {
                     model.addAttribute("message", fieldError.getDefaultMessage());
                 }
             }
@@ -177,7 +173,7 @@ public class WebController {
             if (scheduleResponseDto.getId() != 0) {
                 scheduleService.modifyScheduleById(dto.getId(), dto.getTitle(), dto.getContents());
                 model.addAttribute("message", "수정되었습니다.");
-                model.addAttribute("chekModify", true);
+                model.addAttribute("checkModify", true);
                 model.addAttribute("scheduleUrl", "/web/schedule");
 
             } else {
@@ -189,41 +185,42 @@ public class WebController {
 
     //만들어진 세션을 삭제 후 로그인 페이지로 리다이렉트.
     @GetMapping("/logout")
-        public String logout(Model model,HttpServletRequest request){
+    public String logout(Model model, HttpServletRequest request) {
         HttpSession session = request.getSession();
-            session.invalidate();
-            return "redirect:/web/login";
-        }
+        session.invalidate();
+        return "redirect:/web/login";
+    }
+
     @GetMapping("/changepassword")
-    public String changePasswordView(Model model){
+    public String changePasswordView(Model model) {
         return "changepassword";
     }
 
     @PostMapping("/changepassword")
-    public String changePassword(UserPasswordRequestDto dto,Model model,HttpServletRequest request){
+    public String changePassword(UserPasswordRequestDto dto, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if(userService.modifyUserPasswordById((String)session.getAttribute("userid"),dto)){
+        if (userService.modifyUserPasswordById((String) session.getAttribute("userid"), dto)) {
             model.addAttribute("message", "비밀번호가 정상적으로 수정되었습니다. 로그인페이지로 이동합니다.");
-            model.addAttribute("chekModify",true);
-            model.addAttribute("scheduleUrl","/web/logout");
-        }else {
+            model.addAttribute("chekModify", true);
+            model.addAttribute("scheduleUrl", "/web/logout");
+        } else {
             model.addAttribute("message", "현재 비밀번호가 다릅니다.");
-            model.addAttribute("chekModify",false);
+            model.addAttribute("chekModify", false);
         }
         return "/changepassword";
     }
 
     @GetMapping("/changeuserdata")
-    public String changeUserDataView(Model model){
+    public String changeUserDataView(Model model) {
         return "changeuserdata";
     }
 
     @PostMapping("/changeuserdata")
-    public String changeUserData(UserRequestDto dto,BindingResult bindingResult,Model model,HttpServletRequest request){
+    public String changeUserData(UserRequestDto dto, BindingResult bindingResult, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (bindingResult.hasErrors()) {
-            for(FieldError fieldError : bindingResult.getFieldErrors()) {
-                if(fieldError.getCode().equals("UsernameVerification")) {
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                if (fieldError.getCode().equals("UsernameVerification")) {
                     model.addAttribute("message", fieldError.getDefaultMessage());
                 }
             }
@@ -241,23 +238,26 @@ public class WebController {
     }
 
     @GetMapping("/resignuser")
-    public String resignUserview(Model model){
+    public String resignUserview(Model model) {
         return "resign";
     }
 
     @PostMapping("/resignuser")
-    public String resignUser(ResignUserRequestDto dto,Model model,HttpServletRequest request){
+    public String resignUser(ResignUserRequestDto dto, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        if(userService.resignUser((String)session.getAttribute("userid"),dto)){
-            model.addAttribute("message","그 동안 저희 사이트를 이용해주셔서 감사합니다. 다시 만나 뵙기를 기원하겠습니다.");
-            model.addAttribute("checkresign",true);
-            model.addAttribute("resignUrl","/web/logout");
+        if (userService.resignUser((String) session.getAttribute("userid"), dto)) {
+            model.addAttribute("message", "그 동안 저희 사이트를 이용해주셔서 감사합니다. 다시 만나 뵙기를 기원하겠습니다.");
+            model.addAttribute("checkresign", true);
+            model.addAttribute("resignUrl", "/web/logout");
             return "resign";
 
-        }else {
-            model.addAttribute("message","잘못된 요청입니다.");
+        } else {
+            model.addAttribute("message", "잘못된 요청입니다.");
             return "resign";
         }
+
     }
+
+
 
 }

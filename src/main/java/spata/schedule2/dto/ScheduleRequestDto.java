@@ -6,14 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import spata.schedule2.Validation.ScheduleTitleVerification;
 
-@Setter
 @Getter
 @NoArgsConstructor
 public class ScheduleRequestDto {
 
-    private Long id;
-    //이제 유저이름 대신 유저고유식별자를 받습니다.
-    private String userid;
 
     //유저이름은 user테이블로 이동되었으므로 더 이상 여기서 수정할 수 없습니다.
 

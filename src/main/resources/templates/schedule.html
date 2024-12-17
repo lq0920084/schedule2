@@ -34,7 +34,7 @@
             <button type="submit" name="id" th:value="${result.id}">일정삭제</button>
         </form>
         <form th:action="@{/web/comment}" method="get">
-        <button type="submit" name="id" th:value=${result.id}>덧글확인</button>
+        <button type="submit" name="id" th:value="${result.id}">덧글확인</button>
         </form></td>
     </tr>
     <td><span><button th:onclick="|location.href='@{/web/newSchedule}'|">새일정추가</button></span></td>

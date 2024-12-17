@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<HTML lang="ko" xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <meta charset="UTF-8">
+    <title> 덧글수정</title>
+</HEAD>
+<BODY>
+<H2>덧글수정</H2>
+<form th:action="@{/web/comment/modify}" method="post">
+    <div>
+        <label for="comment">덧글</label>
+        <input type="text" id="comment" name="comment" th:value="${comment}" required>
+    </div>
+    <button type="submit" name="commentid" th:value="${commentid}">덧글수정</button>
+</form>
+<script th:inline="javascript">
+    let message = [[${message}]]
+    if(message!=null) {
+        alert(message);
+    }
+    if([[${checkModify}]]){
+        location.replace([[${commentUrl}]]);
+    }
+</script>
+</BODY>
+</HTML>
