@@ -9,6 +9,6 @@ public class ScheduleTitleValidator implements ConstraintValidator<ScheduleTitle
         if(title==null){
             return false;
         }
-        return title.matches("^[가-힣]{1,10}+$");
+        return title.matches("^[가-힣 ]{1,10}+$");
     }
 }
