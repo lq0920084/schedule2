@@ -74,7 +74,7 @@ public class ScheduleController {
         } else {
             HttpSession session = request.getSession(false);
             if(scheduleService.findScheduleByIdCheckUser((String)session.getAttribute("userid"),id)){
-                return new ResponseEntity<>(scheduleService.modifyScheduleById(id, dto.getTitle(), dto.getContents()), HttpStatus.OK);
+                return new ResponseEntity<>(scheduleService.modifyScheduleById(new ModifyScheduleRequestDto(id, dto.getTitle(), dto.getContents())), HttpStatus.OK);
             }else {
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
