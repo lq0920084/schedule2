@@ -63,7 +63,7 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> modifyScheduleById(@PathVariable Long id, @Validated @RequestBody ModifyScheduleApiRequestDto dto, BindingResult bindingResult) {
+    public ResponseEntity<ScheduleResponseDto> modifyScheduleById(@PathVariable Long id, @Validated @RequestBody ModifyScheduleApiRequestDto dto, BindingResult bindingResult,HttpServletRequest request) {
         if (bindingResult.hasErrors()) {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 if (fieldError.getCode().equals("ScheduleTitleVerification")) {
@@ -72,7 +72,13 @@ public class ScheduleController {
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            return new ResponseEntity<>(scheduleService.modifyScheduleById(id, dto.getTitle(), dto.getContents()), HttpStatus.OK);
+            HttpSession session = request.getSession(false);
+            if(scheduleService.findScheduleByIdCheckUser((String)session.getAttribute("userid"),id)){
+                return new ResponseEntity<>(scheduleService.modifyScheduleById(id, dto.getTitle(), dto.getContents()), HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
         }
     }
 

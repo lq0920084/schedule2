@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import spata.schedule2.dto.ModifyScheduleRequestDto;
 import spata.schedule2.dto.RemoveScheduleRequestDto;
 import spata.schedule2.dto.ScheduleResponseDto;
 import spata.schedule2.entity.Schedule;
@@ -59,14 +60,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 
     @Override
-    public ScheduleResponseDto modifyScheduleById(Long id, String title, String contents) {
-        Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(() ->
+    public ScheduleResponseDto modifyScheduleById(ModifyScheduleRequestDto modifyScheduleRequestDto) {
+        Schedule findSchedule = scheduleRepository.findById(modifyScheduleRequestDto.getId()).orElseThrow(() ->
                 (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist ID")));
         User findUser = findSchedule.getUserid();
         User user = userRepository.findById(findUser.getUserid()).orElseThrow(() ->
                 (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userId")));
-        findSchedule.setTitle(title);
-        findSchedule.setContents(contents);
+        findSchedule.setTitle(modifyScheduleRequestDto.getTitle());
+        findSchedule.setContents(modifyScheduleRequestDto.getContents());
         Schedule schedule =  scheduleRepository.save(findSchedule);
         return new ScheduleResponseDto(
                 schedule.getId(),
@@ -108,9 +109,9 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
-    public ScheduleResponseDto modifyScheduleByIdCheckUser(String userid, Long id,String title,String contents) {
-        if(findScheduleByIdCheckUser(userid,id)){
-            return modifyScheduleById(id,title,contents);
+    public ScheduleResponseDto modifyScheduleByIdCheckUser(String userid, ModifyScheduleRequestDto modifyScheduleRequestDto) {
+        if(findScheduleByIdCheckUser(userid,modifyScheduleRequestDto.getId())){
+            return modifyScheduleById(modifyScheduleRequestDto);
         }
          LocalDateTime nodata = LocalDateTime.now();
         return new ScheduleResponseDto(0L,"NoData","NoData","Nodata",nodata,nodata) ;

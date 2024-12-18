@@ -115,12 +115,9 @@ public class WebScheduleController {
             }
         } else {
             ScheduleResponseDto scheduleResponseDto = scheduleService.modifyScheduleByIdCheckUser(
-                    (String) session.getAttribute("userid"),
-                    dto.getId(),
-                    dto.getTitle(),
-                    dto.getContents());
+                    (String) session.getAttribute("userid"),dto);
             if (scheduleResponseDto.getId() != 0) {
-                scheduleService.modifyScheduleById(dto.getId(), dto.getTitle(), dto.getContents());
+                scheduleService.modifyScheduleById(dto);
                 model.addAttribute("message", "수정되었습니다.");
                 model.addAttribute("checkModify", true);
                 model.addAttribute("scheduleUrl", "/web/schedule");

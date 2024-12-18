@@ -1,5 +1,6 @@
 package spata.schedule2.service;
 
+import spata.schedule2.dto.ModifyScheduleRequestDto;
 import spata.schedule2.dto.RemoveScheduleRequestDto;
 import spata.schedule2.dto.ScheduleResponseDto;
 
@@ -11,7 +12,7 @@ public interface ScheduleService {
 
     ScheduleResponseDto findScheduleById(Long id);
 
-    ScheduleResponseDto modifyScheduleById(Long id,String title,String contents);
+    ScheduleResponseDto modifyScheduleById(ModifyScheduleRequestDto modifyScheduleRequestDto);
 
     void removeScheduleById(Long id);
 
@@ -19,7 +20,7 @@ public interface ScheduleService {
 
     boolean findScheduleByIdCheckUser(String userid,Long id);
 
-    ScheduleResponseDto modifyScheduleByIdCheckUser(String userid,Long id,String title,String contents);
+    ScheduleResponseDto modifyScheduleByIdCheckUser(String userid, ModifyScheduleRequestDto modifyScheduleRequestDto);
 
     List<ScheduleResponseDto> findScheduleByAll();
 
