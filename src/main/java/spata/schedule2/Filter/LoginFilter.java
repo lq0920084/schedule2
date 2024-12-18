@@ -13,7 +13,7 @@ import java.io.IOException;
 @Slf4j
 public class LoginFilter implements Filter {
     private final String[] WEB_REDIRECT = { "/","/web*"};
-    private final String[] WHITE_LIST = {"/web/login","/web/logout","/web/signup","/schedule/login","/user*","/schedule/logout","/schedule/signup"};
+    private final String[] WHITE_LIST = {"/web/login","/web/logout","/web/signup","/api/schedule/login","/api/schedule/logout","/api/user*"};
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httprequest = (HttpServletRequest) request;

@@ -18,7 +18,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/schedule")
+@RequestMapping("/api/schedule")
 @Slf4j
 public class ScheduleController {
 
@@ -29,6 +29,7 @@ public class ScheduleController {
     @PostMapping("/login")
     public ResponseEntity<Void> loginUser(@RequestBody LoginRequestDto dto,HttpServletRequest request){
         LoginResponseDto loginResponseDto = userService.userLogin(dto);
+        System.out.println(loginResponseDto.getUserId());
         if (loginResponseDto.getUserId().equals("LoginFailed")){
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }else {
@@ -62,7 +63,7 @@ public class ScheduleController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ScheduleResponseDto> modifyScheduleById(@PathVariable Long id,@Validated @RequestBody ScheduleRequestDto dto,BindingResult bindingResult) {
+    public ResponseEntity<ScheduleResponseDto> modifyScheduleById(@PathVariable Long id, @Validated @RequestBody ModifyScheduleApiRequestDto dto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
                 if (fieldError.getCode().equals("ScheduleTitleVerification")) {

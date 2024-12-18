@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import spata.schedule2.dto.ResignUserRequestDto;
 import spata.schedule2.dto.UserPasswordRequestDto;
 import spata.schedule2.dto.UserRequestDto;
 import spata.schedule2.dto.UserResponseDto;
@@ -16,7 +17,7 @@ import spata.schedule2.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 @RequiredArgsConstructor
 @Slf4j
 public class UserController {
@@ -67,9 +68,9 @@ if(userService.modifyUserPasswordById(id,dto)) {
 }
 
 @DeleteMapping("{id}")
-    public ResponseEntity<Void>  deleteUserById(@PathVariable String id){
+    public ResponseEntity<Void>  deleteUserById(@PathVariable String id, ResignUserRequestDto dto){
 
-    userService.deleteUserById(id);
+    userService.resignUser(id,dto);
     return new ResponseEntity<>(HttpStatus.OK);
 }
 

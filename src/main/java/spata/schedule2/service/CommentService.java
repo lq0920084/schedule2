@@ -8,7 +8,7 @@ public interface CommentService {
 
     boolean createComment(String userid,CreateCommentRequestDto createCommentRequestDto);
 
-    List<CommentResponseDto> findCommentByAll(Long id);
+    List<CommentResponseDto> findCommentByAll(Long scheduleid);
 
     boolean removeCommentById(String userid, RemoveCommentRequestDto dto);
 

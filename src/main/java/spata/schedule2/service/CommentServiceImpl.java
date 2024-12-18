@@ -36,9 +36,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentResponseDto> findCommentByAll(Long id) {
+    public List<CommentResponseDto> findCommentByAll(Long scheduleid) {
 
-        return Comment_to_CommentResponseDto(commentRepository.findAllByScheduleid(findScheduleID_to_Schedule(id)));
+        return Comment_to_CommentResponseDto(commentRepository.findAllByScheduleid(findScheduleID_to_Schedule(scheduleid)));
     }
 
     @Override
