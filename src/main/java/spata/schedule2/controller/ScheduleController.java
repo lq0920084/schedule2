@@ -83,9 +83,14 @@ public class ScheduleController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> removeScheduleById(@PathVariable Long id){
+    public ResponseEntity<Void> removeScheduleById(@PathVariable Long id,HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        if(scheduleService.findScheduleByIdCheckUser((String)session.getAttribute("userid"),id)){
         scheduleService.removeScheduleById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping
