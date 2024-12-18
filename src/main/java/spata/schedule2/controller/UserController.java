@@ -70,8 +70,12 @@ if(userService.modifyUserPasswordById(id,dto)) {
 @DeleteMapping("{id}")
     public ResponseEntity<Void>  deleteUserById(@PathVariable String id, ResignUserRequestDto dto){
 
-    userService.resignUser(id,dto);
-    return new ResponseEntity<>(HttpStatus.OK);
+
+    if(userService.resignUser(id,dto)) {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }else {
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }
 
 @GetMapping
