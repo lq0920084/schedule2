@@ -27,7 +27,7 @@ public class CommentController {
     }
 
     @PostMapping("/{scheduleid}")
-    public ResponseEntity<List<CommentResponseDto>> createComment(@PathVariable Long scheduleid, CreateCommentApiRequestDto dto, HttpServletRequest request){
+    public ResponseEntity<List<CommentResponseDto>> createComment(@PathVariable Long scheduleid, @RequestBody CreateCommentApiRequestDto dto, HttpServletRequest request){
            HttpSession session = request.getSession(false);
             if(commentService.createComment((String)session.getAttribute("userid"),new CreateCommentRequestDto(scheduleid,dto.getComment()))){
                 return new ResponseEntity<>(commentService.findCommentByAll(scheduleid),HttpStatus.CREATED);
@@ -38,7 +38,7 @@ public class CommentController {
     }
 
     @PutMapping("/{scheduleid}")
-        public ResponseEntity<List<CommentResponseDto>> modifyComent(@PathVariable Long scheduleid, ModifyCommentRequestDto dto,HttpServletRequest request){
+        public ResponseEntity<List<CommentResponseDto>> modifyComent(@PathVariable Long scheduleid, @RequestBody ModifyCommentRequestDto dto,HttpServletRequest request){
         HttpSession session = request.getSession(false);
         if(commentService.modifyCommentById((String)session.getAttribute("userid"),dto)){
             return new ResponseEntity<>(commentService.findCommentByAll(scheduleid),HttpStatus.OK);
@@ -48,7 +48,7 @@ public class CommentController {
     }
 
     @DeleteMapping("/{scheduleid}")
-        public ResponseEntity<List<CommentResponseDto>> removeComment(@PathVariable Long scheduleid, RemoveCommentRequestDto dto,HttpServletRequest request){
+        public ResponseEntity<List<CommentResponseDto>> removeComment(@PathVariable Long scheduleid, @RequestBody RemoveCommentRequestDto dto,HttpServletRequest request){
         HttpSession session = request.getSession(false);
         if(commentService.removeCommentById((String)session.getAttribute("userid"),dto)){
             return new ResponseEntity<>(commentService.findCommentByAll(scheduleid),HttpStatus.OK);

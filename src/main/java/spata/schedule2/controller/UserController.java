@@ -36,13 +36,13 @@ public class UserController {
 
 }
 
-@GetMapping("{id}")
+@GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> findUserById(@PathVariable String id){
 
     return new ResponseEntity<>(userService.findUserById(id),HttpStatus.OK);
 }
 
-@PutMapping("{id}")
+@PutMapping("/{id}")
     public ResponseEntity<Void> modifyUserById(@PathVariable String id,@Validated @RequestBody UserRequestDto userRequestDto,BindingResult bindingResult){
     if(bindingResult.hasErrors()){
         for(FieldError fieldError : bindingResult.getFieldErrors()){
@@ -67,8 +67,8 @@ if(userService.modifyUserPasswordById(id,dto)) {
 }
 }
 
-@DeleteMapping("{id}")
-    public ResponseEntity<Void>  deleteUserById(@PathVariable String id, ResignUserRequestDto dto){
+@DeleteMapping("/{id}")
+    public ResponseEntity<Void>  deleteUserById(@PathVariable String id, @RequestBody ResignUserRequestDto dto){
 
 
     if(userService.resignUser(id,dto)) {
