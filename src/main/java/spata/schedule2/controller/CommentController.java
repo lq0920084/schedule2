@@ -32,13 +32,13 @@ public class CommentController {
     }
 
     @PostMapping("/{scheduleid}")
-    public ResponseEntity<List<CommentResponseDto>> createComment(@Validated @PathVariable Long scheduleid, @RequestBody CreateCommentApiRequestDto dto, BindingResult bindingResult, HttpServletRequest request){
+    public ResponseEntity<List<CommentResponseDto>> createComment(@PathVariable Long scheduleid,@Validated @RequestBody CreateCommentApiRequestDto dto, BindingResult bindingResult, HttpServletRequest request){
            HttpSession session = request.getSession(false);
         if (bindingResult.hasErrors()) {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                if (fieldError.getCode().equals("ScheduleTitleVerification")) {
+
                     log.info(fieldError.getDefaultMessage());
-                }
+
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else{
@@ -51,13 +51,11 @@ public class CommentController {
     }
 
     @PutMapping("/{scheduleid}")
-        public ResponseEntity<List<CommentResponseDto>> modifyComent(@Validated @PathVariable Long scheduleid,BindingResult bindingResult, @RequestBody ModifyCommentRequestDto dto,HttpServletRequest request){
+        public ResponseEntity<List<CommentResponseDto>> modifyComent(@PathVariable Long scheduleid,@Validated @RequestBody ModifyCommentRequestDto dto,BindingResult bindingResult,HttpServletRequest request){
         HttpSession session = request.getSession(false);
         if (bindingResult.hasErrors()) {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                if (fieldError.getCode().equals("ScheduleTitleVerification")) {
                     log.info(fieldError.getDefaultMessage());
-                }
             }
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
