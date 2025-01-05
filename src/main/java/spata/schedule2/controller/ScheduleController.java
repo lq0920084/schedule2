@@ -26,18 +26,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
     private final UserService userService;
 
-    @PostMapping("/login")
-    public ResponseEntity<Void> loginUser(@RequestBody LoginRequestDto dto,HttpServletRequest request){
-        LoginResponseDto loginResponseDto = userService.userLogin(dto);
-        System.out.println(loginResponseDto.getUserId());
-        if (loginResponseDto.getUserId().equals("LoginFailed")){
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }else {
-            HttpSession session = request.getSession();
-            session.setAttribute("userid", loginResponseDto.getUserId());
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-    }
+
 
     @PostMapping
     public ResponseEntity<ScheduleResponseDto> createSchedule(@Validated @RequestBody CreateScheduleRequestDto dto, BindingResult bindingResult, HttpServletRequest request) {
@@ -98,11 +87,6 @@ public class ScheduleController {
 
         return new ResponseEntity<>(scheduleService.findScheduleByAll(),HttpStatus.OK);
     }
-    @GetMapping("/logout")
-    public ResponseEntity<Void> logout(HttpServletRequest request){
-        HttpSession session = request.getSession(false);
-        session.invalidate();
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+
 
 }

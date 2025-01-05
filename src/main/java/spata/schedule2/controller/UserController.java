@@ -1,17 +1,18 @@
 package spata.schedule2.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import spata.schedule2.dto.ResignUserRequestDto;
-import spata.schedule2.dto.UserPasswordRequestDto;
-import spata.schedule2.dto.UserRequestDto;
-import spata.schedule2.dto.UserResponseDto;
+import org.springframework.web.server.ResponseStatusException;
+import spata.schedule2.dto.*;
 import spata.schedule2.service.UserService;
 
 import java.util.List;
@@ -23,6 +24,20 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    @PostMapping("/login")
+    public ResponseEntity<Void> loginUser( HttpServletRequest request){
+        if (request.getAttribute("statusCode")==null){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else {
+            throw new ResponseStatusException((HttpStatusCode)request.getAttribute("statusCode"),(String)request.getAttribute("message"));
+        }
+    }
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        session.invalidate();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 @PostMapping
     public ResponseEntity<UserResponseDto> createUser(@Validated @RequestBody UserRequestDto dto, BindingResult bindingResult){

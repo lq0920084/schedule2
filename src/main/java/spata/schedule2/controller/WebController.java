@@ -3,6 +3,7 @@ package spata.schedule2.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import spata.schedule2.service.UserService;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/web")
@@ -61,17 +63,13 @@ public class WebController {
 
     //사용자로부터 이메일과 비밀번호를 받아 로그인 세션 생성.
     @PostMapping("/login")
-    public String loginPostView(@ModelAttribute LoginRequestDto dto, Model model, HttpServletRequest request) {
+    public String loginPostView( Model model, HttpServletRequest request) {
         HttpSession session;
-        LoginResponseDto loginResponseDto = userService.userLogin(dto);
-        if (loginResponseDto.getUserId().equals("LoginFailed")) {
-            model.addAttribute("message", "로그인에 실패했습니다. 다시 확인해주세요.");
-        } else {
+        session = request.getSession(false);
+        if (session!=null) {
             model.addAttribute("message", "로그인에 성공했습니다.");
             model.addAttribute("checkSignIn", true);
             model.addAttribute("signInUrl", "/web/schedule");
-            session = request.getSession();
-            session.setAttribute("userid", loginResponseDto.getUserId());
         }
         return "login";
     }

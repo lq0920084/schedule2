@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import spata.schedule2.Exception.LoginWebException;
 import spata.schedule2.dto.*;
 import spata.schedule2.entity.User;
 import spata.schedule2.repository.UserRepository;
@@ -88,12 +89,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public LoginResponseDto userLogin(LoginRequestDto loginRequestDto) {
+    public LoginResponseDto userLogin(LoginRequestDto loginRequestDto)  {
         User user = checkEmail(loginRequestDto.getEmail());
         if (user.getPassword().equals(encryptPassword(loginRequestDto.getPassword()))) {
             return new LoginResponseDto(user.getUserid());
         }
-        return new LoginResponseDto("LoginFailed");
+        if(loginRequestDto.isUi()){
+            throw new LoginWebException("이메일 또는 비밀번호가 일치하지 않습니다.");
+        }else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"이메일 또는 비밀번호가 일치하지 않습니다.");
+        }
+
     }
 
     @Transactional
