@@ -44,7 +44,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public boolean removeCommentById(String userid, RemoveCommentRequestDto dto) {
         Comment comment = commentRepository.findById(dto.getCommentid()).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist ID")));
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 덧글이 없습니다.")));
         if(comment.getUserid().getUserid().equals(userid)){
             commentRepository.deleteById(dto.getCommentid());
             return true;
@@ -56,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public boolean findCommentByIdCheckUser(String userid, ModifyCommentViewRequestDto dto) {
         Comment comment = commentRepository.findById(dto.getCommentid()).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자가 없습니다.")));
         if(comment.getUserid().getUserid().equals(userid)){
             return true;
         }
@@ -67,9 +67,9 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public boolean modifyCommentById(String userid, ModifyCommentRequestDto dto) {
         Comment comment = commentRepository.findById(dto.getCommentid()).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자가 없습니다.")));
         if(comment.getUserid().getUserid().equals(userid)){
-            comment.setComment(dto.getComment());
+            comment.updateComment(dto.getComment());
             commentRepository.save(comment);
             return true;
         }

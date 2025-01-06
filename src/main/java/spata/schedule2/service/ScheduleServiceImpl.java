@@ -27,7 +27,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleResponseDto createSchedule(String userid, String title, String contents) {
         User user = userRepository.findById(userid).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userId")));
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자가 없습니다.")));
         Schedule schedule = new Schedule(user, title, contents);
         Schedule savedSchedule = scheduleRepository.save(schedule);
 
@@ -43,11 +43,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleResponseDto findScheduleById(Long id) {
         Schedule findSchedule = scheduleRepository.findById(id).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist ID"))
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자가 없습니다."))
         );
         User findUser = findSchedule.getUserid();
         User user = userRepository.findById(findUser.getUserid()).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userId")));
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자가 없습니다.")));
         return new ScheduleResponseDto(
                 findSchedule.getId(),
                 user.getUsername(),
@@ -66,8 +66,7 @@ public class ScheduleServiceImpl implements ScheduleService {
         User findUser = findSchedule.getUserid();
         User user = userRepository.findById(findUser.getUserid()).orElseThrow(() ->
                 (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userId")));
-        findSchedule.setTitle(modifyScheduleRequestDto.getTitle());
-        findSchedule.setContents(modifyScheduleRequestDto.getContents());
+        findSchedule.updateSchedule(modifyScheduleRequestDto.getTitle(),modifyScheduleRequestDto.getContents());
         Schedule schedule =  scheduleRepository.save(findSchedule);
         return new ScheduleResponseDto(
                 schedule.getId(),

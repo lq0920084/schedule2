@@ -52,8 +52,7 @@ public class UserServiceImpl implements UserService {
         User user = findUserID_to_User(id);
         if (user.getPassword().equals(encryptPassword(userRequestDto.getPassword()))) {
             if (checkEmail(userRequestDto.getEmail()).getEmail().equals("NoEmail")) {
-                user.setUsername(userRequestDto.getUsername());
-                user.setEmail(userRequestDto.getEmail());
+                user.updateUser(userRequestDto.getUsername(),userRequestDto.getEmail());
                 userRepository.save(user);
                 return true;
             } else {
@@ -68,7 +67,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUserById(String id) {
         userRepository.findById(id).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자가 없습니다.")));
         userRepository.deleteById(id);
     }
 
@@ -107,7 +106,7 @@ public class UserServiceImpl implements UserService {
     public boolean modifyUserPasswordById(String id, UserPasswordRequestDto dto) {
         User user = findUserID_to_User(id);
         if (user.getPassword().equals(encryptPassword(dto.getCurrent_password()))) {
-            user.setPassword(encryptPassword(dto.getNew_password()));
+            user.updatePassword(encryptPassword(dto.getNew_password()));
             return true;
         } else {
             return false;
@@ -144,7 +143,7 @@ public class UserServiceImpl implements UserService {
 
     private User findUserID_to_User(String id){
         return userRepository.findById(id).orElseThrow(() ->
-                (new ResponseStatusException(HttpStatus.NOT_FOUND, "does not exist userid")));
+                (new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자가 없습니다.")));
     }
     private String encryptPassword(String password){
         //암호로 레인보우 테이블을 생성할 수 없도록 Salt를 추가합니다.

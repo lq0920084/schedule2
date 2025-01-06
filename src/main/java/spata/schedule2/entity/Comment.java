@@ -2,13 +2,11 @@ package spata.schedule2.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "comment")
 public class Comment extends CommentDateEntity {
     @Id
@@ -37,5 +35,9 @@ public class Comment extends CommentDateEntity {
 
     public Comment() {
 
+    }
+
+    public void updateComment(String comment){
+        this.comment = comment;
     }
 }

@@ -3,11 +3,9 @@ package spata.schedule2.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Getter
-@Setter
 @Table(name="users")
 @AllArgsConstructor
 public class User extends UserDateEntity {
@@ -30,5 +28,12 @@ public class User extends UserDateEntity {
     public User(String email){
         this.email=email;
     }
+    public void updateUser(String username,String email){
+        this.username=username;
+        this.email=email;
+    }
 
+    public void updatePassword(String password){
+        this.password=password;
+    }
 }

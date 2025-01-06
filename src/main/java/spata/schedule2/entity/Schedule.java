@@ -42,4 +42,10 @@ public class Schedule extends ScheduleDateEntity {
         this.contents=contents;
     }
 
+    public void updateSchedule(String title,String contents){
+        this.title=title;
+        this.contents=contents;
+
+    }
+
 }
